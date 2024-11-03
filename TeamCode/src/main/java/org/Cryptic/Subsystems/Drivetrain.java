@@ -13,9 +13,7 @@ public class Drivetrain extends Subsystem {
     public DcMotorEx driveFL;
     public DcMotorEx driveFR;
 
-    //public LinearOpMode opMode;
     public void init(LinearOpMode opMode) {
-        //this.opMode = opMode;
         driveBL = opMode.hardwareMap.get(DcMotorEx.class, "backLeft");
         driveBR = opMode.hardwareMap.get(DcMotorEx.class, "backRight");
         driveFL = opMode.hardwareMap.get(DcMotorEx.class, "frontLeft");
