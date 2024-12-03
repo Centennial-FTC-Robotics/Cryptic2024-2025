@@ -22,6 +22,8 @@ public class MainTeleOp extends LinearOpMode {
         robot.initialize(this);
         //robot.dt.initTeleOp();
 
+        //jfyfyf
+
         /*
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
