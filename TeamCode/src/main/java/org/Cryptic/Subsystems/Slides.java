@@ -41,8 +41,7 @@ public class Slides extends Subsystem {
     public CRServo wheel;
 
     public static int off = 0;
-    public int[] targets = {0, 350-off, 420-off, 500-off, 580-off, 660-off, 740-off, 820-off,
-            900-off, 980-off};
+    public int[] targets = {5, 500-off, 1000-off, 1500-off, 2010-off};
     public double manualPower = 0;
 
     public int pos = -1;
@@ -52,8 +51,8 @@ public class Slides extends Subsystem {
     public void init(LinearOpMode opmode) throws InterruptedException {
         this.opmode = opmode;
 
-        slideMotorL = opmode.hardwareMap.get(DcMotorEx.class, "slideMotorL");
-        slideMotorR = opmode.hardwareMap.get(DcMotorEx.class, "slideMotorR");
+        slideMotorL = opmode.hardwareMap.get(DcMotorEx.class, "slideLeft");
+        slideMotorR = opmode.hardwareMap.get(DcMotorEx.class, "slideRight");
 
         slideMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
 

@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.Cryptic.Robot;
 
+@Config
 @TeleOp (name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
 
@@ -20,6 +24,8 @@ public class MainTeleOp extends LinearOpMode {
         Robot robot = new Robot();
 
         robot.initialize(this);
+
+        GamepadEx drivePad = new GamepadEx(gamepad1);
         //robot.dt.initTeleOp();
 
         //jfyfyf
@@ -28,24 +34,26 @@ public class MainTeleOp extends LinearOpMode {
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
         */
-        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
+//        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
 
         /*
         slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         */
-        hangMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         /*
         slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         */
-        hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
         while (opModeIsActive()) {
+            drivePad.readButtons();
+
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
@@ -59,14 +67,16 @@ public class MainTeleOp extends LinearOpMode {
             // 2100 max slide value
             //robot.slides.setManualSlidePower(gamepad2.right_stick_y);
 
-            hangMotor.setPower(gamepad2.left_stick_y);
-
-            if(gamepad2.x) {
+//            hangMotor.setPower(gamepad2.left_stick_y);
+            if(drivePad.wasJustPressed(GamepadKeys.Button.A)) {
                 robot.slides.incrementSlidePos(1);
             }
-            if(gamepad2.a) {
-                robot.slides.incrementSlidePos(2);
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.X)) {
+                robot.slides.retractSlides();
             }
+
+            robot.slides.update();
         }
     }
 }
