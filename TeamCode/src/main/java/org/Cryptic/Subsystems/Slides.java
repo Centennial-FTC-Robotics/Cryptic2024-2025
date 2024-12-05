@@ -17,7 +17,8 @@ public class Slides extends Subsystem {
     public static double slideD = 0;
     public static double slideF = 0.1;
     public static int errorThreshold = 5;
-
+    public final int intakeArmThreshold = 900;
+    public boolean canOuttake;
     public static double pivotHeight = 150;
 
     public static double pivotFlat = 0.42;
@@ -107,8 +108,11 @@ public class Slides extends Subsystem {
         }
 
 
+
         pos = -slideMotorR.getCurrentPosition();
         double error = slidesTarget - pos;
+
+        canOuttake= pos >= intakeArmThreshold;
 
         double speed = (double)(error-lastError)/(double)(t-lastTime);
 

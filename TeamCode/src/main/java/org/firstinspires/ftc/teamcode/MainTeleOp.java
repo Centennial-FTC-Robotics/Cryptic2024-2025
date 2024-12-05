@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.Cryptic.Robot;
 
@@ -70,13 +71,48 @@ public class MainTeleOp extends LinearOpMode {
 //            hangMotor.setPower(gamepad2.left_stick_y);
             if(drivePad.wasJustPressed(GamepadKeys.Button.A)) {
                 robot.slides.incrementSlidePos(1);
+
             }
+
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.B)) {
+
+                if(robot.intake.extended){
+                    robot.intake.fullRetract();
+                }
+                else{
+                    robot.intake.fullExtend();
+                }
+
+            }
+
+
+
+
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.slides.retractSlides();
             }
 
+            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+                robot.intake.setArmAngle(270);
+            }
+            if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
+
+                    if(!robot.intake.clawOpened) {
+                        robot.intake.openClaw();
+                    }
+                    else if(robot.intake.clawOpened){
+                        robot.intake.closeCLaw();
+                    }
+
+            }
+
+
             robot.slides.update();
+            robot.intake.update();
+
+
         }
     }
 }
