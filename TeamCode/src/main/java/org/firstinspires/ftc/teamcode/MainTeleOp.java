@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -60,6 +62,14 @@ public class MainTeleOp extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
             double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
+            robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
+                    new Vector2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x
+                    ),
+                    -gamepad1.right_stick_x
+            ));
+
             //robot.dt.driveBL.setPower((y - x + rx) / d);
             //robot.dt.driveBR.setPower((y + x - rx) / d);
             //robot.dt.driveFL.setPower((y + x + rx) / d);
@@ -95,7 +105,7 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                robot.intake.setArmAngle(270);
+                robot.intake.armAngle=268;
             }
             if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
 

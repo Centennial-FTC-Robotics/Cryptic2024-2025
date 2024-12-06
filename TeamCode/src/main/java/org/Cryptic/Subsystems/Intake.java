@@ -20,11 +20,13 @@ public class Intake extends Subsystem {
     public final double maxExtend = .95;
     public final double minExtend = .22;
 
-    public final double clawCloseValue = .4;
-    public final double clawOpenValue = .2;
+    public final double clawCloseValue = .13;
+    public final double clawOpenValue = 0;
     public boolean clawOpened = false;
 
     public double extendValue;
+
+    public int armAngle;
 
 
 
@@ -42,12 +44,10 @@ public class Intake extends Subsystem {
 
         closeCLaw();
 
-        leftClawServo.setPosition(.3);
-
-        rightClawServo.setPosition(.7);
+        defaultDiff();
 
         fullRetract();
-        setArmAngle(0);
+        setArmAngle(10);
 
 
         Thread.sleep(700);
@@ -55,8 +55,20 @@ public class Intake extends Subsystem {
 
     }
 
+    public void straightDiff(){
+        leftClawServo.setPosition(.5);
+        rightClawServo.setPosition(.5);
+    }
+
+    public void defaultDiff(){
+        leftClawServo.setPosition(1);
+        rightClawServo.setPosition(0);
+    }
+
     public void setArmAngle(int angle){
         int maxValue = 270;
+
+
 
         if (!robot.slides.canOuttake){
             maxValue = 60;
@@ -99,8 +111,14 @@ public class Intake extends Subsystem {
 
     public void update(){
 
+        if(armAngle>200){
+            straightDiff();
+        }
+
         extended= !(extendValue < 5);
         this.setExtend(extendValue);
+
+        this.setArmAngle(armAngle);
 
 
     }
