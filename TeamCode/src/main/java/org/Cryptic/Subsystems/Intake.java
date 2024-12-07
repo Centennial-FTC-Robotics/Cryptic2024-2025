@@ -291,7 +291,4 @@ public class Intake extends Subsystem {
         this.setArmAngle(armAngle);
         this.setClawPos(clawRotate);
     }
-
-
-
 }
