@@ -204,9 +204,6 @@ public class Intake extends Subsystem {
         spinCounter = Math.max(-2,spinCounter);
         spinCounter = Math.min(2,spinCounter);
 
-
-
-
         if(startIntake){
 
             if(robot.slides.pos>300){
@@ -286,7 +283,7 @@ public class Intake extends Subsystem {
         }
 
         if (armAngle > 200) {
-            straightDiff();
+            clawRotate = 0;
         }
 
         extended = !(extendValue < 5);

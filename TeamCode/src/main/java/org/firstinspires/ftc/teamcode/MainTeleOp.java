@@ -33,6 +33,29 @@ public class MainTeleOp extends LinearOpMode {
         robot.initialize(this);
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
+        //robot.dt.initTeleOp();
+
+        //jfyfyf
+
+        /*
+        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
+        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
+        */
+//        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
+
+        /*
+        slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        */
+
+
+        /*
+        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        */
+//        hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
         while (opModeIsActive()) {
@@ -44,10 +67,14 @@ public class MainTeleOp extends LinearOpMode {
             double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
             if (robot.slides.pos > 1800) {
-                slowModeAdjust = 0.6;
+                slowModeAdjust = 0.55;
             } else {
-                slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
+                slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0.3, 1);
             }
+
+
+            // debug
+            telemetry.addData("Slow Mode Value: ", slowModeAdjust);
 
             robot.dt.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
 
@@ -97,7 +124,7 @@ public class MainTeleOp extends LinearOpMode {
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 robot.intake.armAngle=270;
-                robot.intake.clawRotate=40;
+
             }
             if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
 
@@ -128,6 +155,7 @@ public class MainTeleOp extends LinearOpMode {
             robot.slides.update();
             robot.intake.update();
 
+            telemetry.update();
 
         }
     }
