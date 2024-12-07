@@ -2,15 +2,12 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.Cryptic.Robot;
-import org.Cryptic.Subsystems.Drivetrain;
 
-@Autonomous (name="RedNetZone")
-public class RedNet extends LinearOpMode {
+@Autonomous (name="BlueNetZone (USE RED ALL THE TIME)")
+public class BlueNet extends LinearOpMode {
 
     private DcMotorEx driveBL;
     private DcMotorEx driveBR;
@@ -38,13 +35,7 @@ public class RedNet extends LinearOpMode {
             robot.slides.update();
         }
 
-        robot.dt.turnToHeading(-25);
-
-        outtake(robot);
-        //robot.dt.strafeDistance(12);
-
-
-        robot.dt.turnToHeading(115);
+        robot.dt.turnToHeading(25);
         // Raise slides up a little
         // Extend Hori slides
 
@@ -71,26 +62,9 @@ public class RedNet extends LinearOpMode {
         // Retract Hori slides
 
 
-        robot.dt.turnToHeading(-25);
+        robot.dt.turnToHeading(150);
         //robot.dt.driveDistance(-7);
         // Raise slides to max
-
-        outtake(robot);
-
-        // Diffy Forward
-        // Slides down
-        //robot.dt.driveDistance(7);
-
-        // Go Park
-        robot.dt.turnToHeading(-90);
-        robot.dt.driveDistance(36);
-        robot.dt.turnToHeading(0);
-        robot.dt.driveDistance(12);
-
-
-    }
-
-    public void outtake(Robot robot){
         robot.slides.incrementSlidePos(6);
 
         while(robot.slides.pos<2025){
@@ -125,6 +99,17 @@ public class RedNet extends LinearOpMode {
             robot.intake.update();
             robot.slides.update();
         }
+        // Diffy Forward
+        // Slides down
+        //robot.dt.driveDistance(7);
+
+        // Go Park
+        robot.dt.turnToHeading(90);
+        robot.dt.driveDistance(36);
+        robot.dt.turnToHeading(180);
+        robot.dt.driveDistance(12);
+
 
     }
 }
+
