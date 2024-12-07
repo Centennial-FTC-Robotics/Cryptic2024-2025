@@ -74,7 +74,7 @@ public class Intake extends Subsystem {
 
     public void defaultDiff(){
 
-        clawRotate = 70;
+        clawRotate = 90;
     }
 
     public void defaultPosition(){
@@ -110,7 +110,7 @@ public class Intake extends Subsystem {
                 spinVal = .5;
             }
 
-            spinVal+=.05;
+
 
 
             leftClawServo.setPosition(Range.clip((1-pitchVal)+spinVal,0,1));
@@ -182,13 +182,13 @@ public class Intake extends Subsystem {
     public void intakePosition()
     {
         armAngle=25;
-        clawRotate = 55;
+        clawRotate = 65;
 
     }
 
     public void intakeExtendPosition(){
         armAngle=22;
-        clawRotate = 58;
+        clawRotate = 68;
     }
     // Class-level variables
     private long defaultPosStartTime = 0;
