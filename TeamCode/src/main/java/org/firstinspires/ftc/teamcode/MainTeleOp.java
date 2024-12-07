@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
 
+@Photon
 @Config
 @TeleOp (name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
@@ -31,29 +33,6 @@ public class MainTeleOp extends LinearOpMode {
         robot.initialize(this);
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
-        //robot.dt.initTeleOp();
-
-        //jfyfyf
-
-        /*
-        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
-        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
-        */
-//        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
-
-        /*
-        slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        */
-
-
-        /*
-        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        */
-//        hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
         while (opModeIsActive()) {
@@ -65,10 +44,11 @@ public class MainTeleOp extends LinearOpMode {
             double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
             if (robot.slides.pos > 1800) {
-                slowModeAdjust = 0.7;
+                slowModeAdjust = 0.6;
             } else {
                 slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
             }
+
             robot.dt.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
 
             /*
