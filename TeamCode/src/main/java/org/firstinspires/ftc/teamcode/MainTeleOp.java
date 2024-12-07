@@ -69,7 +69,7 @@ public class MainTeleOp extends LinearOpMode {
             } else {
                 slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
             }
-            robot.dt.drive(gamepad1.left_stick_x, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
+            robot.dt.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
 
             /*
             robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
