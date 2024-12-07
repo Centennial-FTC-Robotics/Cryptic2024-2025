@@ -124,7 +124,7 @@ public class Intake extends Subsystem {
 
 
 
-        if (!robot.slides.canOuttake || extendValue>10){
+        if (robot.slides.pos<1000 || extendValue>10){
             maxValue = 40;
         }
 
@@ -178,9 +178,14 @@ public class Intake extends Subsystem {
 
     public void intakePosition()
     {
-        armAngle=20;
-        clawRotate = 60;
+        armAngle=25;
+        clawRotate = 55;
 
+    }
+
+    public void intakeExtendPosition(){
+        armAngle=22;
+        clawRotate = 58;
     }
     // Class-level variables
     private long defaultPosStartTime = 0;
@@ -225,7 +230,12 @@ public class Intake extends Subsystem {
             }
 
             if(intakePos==2){
-                intakePosition();
+
+                if(extendValue<30) {
+                    intakePosition();
+                }else{
+                    intakeExtendPosition();
+                }
             }
 
             if(intakePos==3){
