@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.Cryptic.Robot;
 import org.Cryptic.Subsystems.Drivetrain;
 
 @Autonomous (name="RedNetZone")
@@ -18,12 +19,40 @@ public class RedNet extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Drivetrain dt = new Drivetrain();
-        dt.init(this);
+        Robot robot = new Robot();
+        robot.initialize(this);
 
         waitForStart();
 
-        dt.ticksToInches(2);
+        robot.imu.revIMU.reset();
+        robot.dt.strafeDistance(12);
+
+        robot.dt.turnToHeading(25);
+        // Raise slides up a little
+        // Extend Hori slides
+        // Arm Down
+        // Claw Close
+        // Arm Up
+        // Retract Hori slides
+
+        robot.dt.turnToHeading(105);
+        robot.dt.driveDistance(-10);
+        // Raise slides to max
+        // Arm Back
+        // Diffy Back
+        robot.dt.driveDistance(-14);
+        // Claw Open
+        robot.dt.driveDistance(14);
+        // Arm Forward
+        // Diffy Forward
+        // Slides down
+        robot.dt.driveDistance(10);
+
+        // Go Park
+        robot.dt.turnToHeading(90);
+        robot.dt.driveDistance(36);
+        robot.dt.turnToHeading(180);
+        robot.dt.driveDistance(12);
 
 
     }

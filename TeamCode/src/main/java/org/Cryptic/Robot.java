@@ -10,11 +10,13 @@ public class Robot {
     public Drivetrain dt = new Drivetrain();
     public Slides slides = new Slides();
     public Intake intake = new Intake();
+    public IMU imu = new IMU();
 
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
             slides,
             intake,
+            imu
     };
 
     public void initialize(LinearOpMode opmode) throws InterruptedException {

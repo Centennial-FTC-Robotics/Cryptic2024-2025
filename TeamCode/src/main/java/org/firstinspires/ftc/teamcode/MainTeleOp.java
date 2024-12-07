@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -57,6 +58,7 @@ public class MainTeleOp extends LinearOpMode {
 
         //slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        //robot.dt.drivebase = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         waitForStart();
         while (opModeIsActive()) {
             drivePad.readButtons();
@@ -148,8 +150,6 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             telemetry.addData("Arm servo angle: ", robot.intake.getArmAngle());
-            telemetry.update();
-
 
             robot.slides.update();
             robot.intake.update();
