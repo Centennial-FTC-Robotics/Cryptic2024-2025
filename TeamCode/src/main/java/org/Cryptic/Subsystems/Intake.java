@@ -129,6 +129,9 @@ public class Intake extends Subsystem {
         }
 
 
+
+
+
         angle = Range.clip(angle,0,maxValue);
         double armValue = Range.scale(angle,0,270,0,1);
 
