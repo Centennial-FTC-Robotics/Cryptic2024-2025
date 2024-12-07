@@ -67,7 +67,7 @@ public class MainTeleOp extends LinearOpMode {
             if (robot.slides.pos > 1800) {
                 slowModeAdjust = 0.55;
             } else {
-                slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
+                slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0.3, 1);
             }
 
 
@@ -122,7 +122,7 @@ public class MainTeleOp extends LinearOpMode {
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 robot.intake.armAngle=270;
-                robot.intake.clawRotate=40;
+
             }
             if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
 
