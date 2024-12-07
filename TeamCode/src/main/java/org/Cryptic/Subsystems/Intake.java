@@ -18,7 +18,7 @@ public class Intake extends Subsystem {
 
     public boolean extended = false;
 
-    private boolean startIntake;
+    public boolean startIntake;
 
     public final double maxExtend = .95;
     public final double minExtend = .22;
@@ -36,10 +36,10 @@ public class Intake extends Subsystem {
     public int clawRotate;
     public int clawSpin;
 
-    private boolean defaultPos;
+    public boolean defaultPos;
 
-    private boolean extendAndUp;
-    private boolean extendAndDown;
+    public boolean extendAndUp;
+    public boolean extendAndDown;
 
 
 
@@ -215,7 +215,7 @@ public class Intake extends Subsystem {
 
         if(extendAndDown || extendAndUp){
             if(extendStartTime == 0 ){
-                robot.slides.slidesTarget+=100;
+                robot.slides.slidesTarget=250;
                 extendStartTime = System.currentTimeMillis();
             }
 
@@ -229,7 +229,7 @@ public class Intake extends Subsystem {
                 }
             }
             if(System.currentTimeMillis()-extendStartTime>800){
-                robot.slides.slidesTarget-=100;
+                robot.slides.slidesTarget=175;
 
                 extendStartTime = 0;
 
@@ -297,14 +297,14 @@ public class Intake extends Subsystem {
                 defaultDiff(); // Set claw position
                 setArmAngle(10);
             }
-            if (robot.slides.pos > 1800 ) {
+            if (robot.slides.pos > 1850 ) {
                 robot.slides.retractSlides();
                 defaultPos = false; // Reset default position mode
                 defaultPosStartTime = 0; // Reset timer
             }
 
             // Wait for 2 seconds before retracting slides
-            else if (System.currentTimeMillis() - defaultPosStartTime > 600) {
+            else if (System.currentTimeMillis() - defaultPosStartTime > 750) {
 
                     setArmAngle(10);
                     robot.slides.retractSlides();

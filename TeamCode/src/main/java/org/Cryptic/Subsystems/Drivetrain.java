@@ -6,42 +6,57 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Subsystem;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class Drivetrain extends Subsystem {
 
+    public DcMotor driveBL;
+    public DcMotor driveBR;
+    public DcMotor driveFL;
+    public DcMotor driveFR;
+
     public MecanumDrive drivebase;
 
-    public DcMotorEx driveBR;
-    public DcMotorEx driveBL;
-    public DcMotorEx driveFR;
-    public DcMotorEx driveFL;
+    public LinearOpMode opmode;
 
+    // Dead Wheel Variables
+    double wheelDiameter = 38;
+    int countsPerRev = 8192;
+    double wheelCircum = Math.PI * (wheelDiameter / 25.4);
+    double ticksOverIn = 8192 / wheelCircum;
 
+    public double targetHeading = 0;
+
+    public static double headingP = 0.05;
+    public static double headingLimit = 0.4;
 
     public void init(LinearOpMode opMode) {
         drivebase = new MecanumDrive(opMode.hardwareMap, new Pose2d(0, 0, 0));
     }
 
     public void drive(double drive, double strafe, double turn, double speedMult) {
+
         robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
                         -(drive * speedMult),
                         -(strafe * speedMult)
-                 ),
+                ),
                 -(turn * speedMult)
         ));
+
     }
 
     public void initNoRoadRunner(LinearOpMode opMode) {
         this.opmode = opMode;
         //drivebase = null;
-        driveBL = opMode.hardwareMap.get(DcMotorEx.class, "leftBack");
-        driveBR = opMode.hardwareMap.get(DcMotorEx.class, "rightBack");
-        driveFL = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
-        driveFR = opMode.hardwareMap.get(DcMotorEx.class, "rightFront");
+        driveBL = opMode.hardwareMap.get(DcMotor.class, "leftBack");
+        driveBR = opMode.hardwareMap.get(DcMotor.class, "rightBack");
+        driveFL = opMode.hardwareMap.get(DcMotor.class, "leftFront");
+        driveFR = opMode.hardwareMap.get(DcMotor.class, "rightFront");
 
         driveBL.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -50,10 +65,10 @@ public class Drivetrain extends Subsystem {
         driveFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        driveBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // par0: rightFront, negative
         // par1: rightBack, negative
@@ -78,10 +93,10 @@ public class Drivetrain extends Subsystem {
 
         double driveP = 0.0001;
 //        double headingP = 0.3;
-
-        int targetDist = inchesToTicks(distanceInch);
-
         int currentPos = getEncoderTicks()[1];
+
+        int targetDist = inchesToTicks(distanceInch) + currentPos;
+
         int error = targetDist - currentPos;
 
         long lastTime = System.currentTimeMillis()-1;
@@ -126,10 +141,10 @@ public class Drivetrain extends Subsystem {
         double driveP = 0.0001;
 //        double headingP = 0.3;
 
-
-        int targetDist = inchesToTicks(distanceInch);
-
         int currentPos = getEncoderTicks()[2];
+
+        int targetDist = inchesToTicks(distanceInch) + currentPos;
+
         int error = targetDist - currentPos;
 
         long lastTime = System.currentTimeMillis();
@@ -178,7 +193,7 @@ public class Drivetrain extends Subsystem {
         double lastHeading = currentHeading;
         long lastTime = System.currentTimeMillis();
 
-        while(opmode.opModeIsActive() && (Math.abs(error) > 1.5 ||
+        while(opmode.opModeIsActive() && (Math.abs(error) > 3.5 ||
                 Math.abs((currentHeading-lastHeading)/(System.currentTimeMillis()-lastTime)) > 0.0005)
                 && System.currentTimeMillis()-startTime < timeout) {
             lastHeading = currentHeading;
@@ -205,30 +220,31 @@ public class Drivetrain extends Subsystem {
         double rx = turn;
         double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
+        /*
         driveBL.setPower(y);
         driveBR.setPower(y);
         driveFL.setPower(y);
         driveFR.setPower(y);
-        /*
+        */
         driveBL.setPower((y - x + rx) / d);
         driveBR.setPower((y + x - rx) / d);
         driveFL.setPower((y + x + rx) / d);
         driveFR.setPower((y - x - rx) / d);
-         */
     }
 
     public void resetEncoders() {
-        driveBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //driveFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public int[] getEncoderTicks() {
         return new int[]{
                 -driveFR.getCurrentPosition(),
                 -driveBR.getCurrentPosition(),
-                -driveBL.getCurrentPosition()
+                driveBL.getCurrentPosition()
         };
     }
 }
+
