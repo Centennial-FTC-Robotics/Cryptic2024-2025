@@ -65,9 +65,9 @@ public class MainTeleOp extends LinearOpMode {
             double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
             if (robot.slides.pos > 1800) {
-                double slowModeAdjust = 0.7;
+                slowModeAdjust = 0.7;
             } else {
-                double slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
+                slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
             }
             robot.dt.drive(gamepad1.left_stick_x, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
 
