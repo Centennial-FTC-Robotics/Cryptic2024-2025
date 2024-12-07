@@ -31,6 +31,7 @@ public class MainTeleOp extends LinearOpMode {
         robot.initialize(this);
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
+        GamepadEx intakePad = new GamepadEx(gamepad2);
         //robot.dt.initTeleOp();
 
         //jfyfyf
@@ -58,6 +59,7 @@ public class MainTeleOp extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             drivePad.readButtons();
+            intakePad.readButtons();
 
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
@@ -95,13 +97,13 @@ public class MainTeleOp extends LinearOpMode {
             //robot.slides.setManualSlidePower(gamepad2.right_stick_y);
 
 //            hangMotor.setPower(gamepad2.left_stick_y);
-            if(drivePad.wasJustPressed(GamepadKeys.Button.A)) {
+            if(intakePad.wasJustPressed(GamepadKeys.Button.A)) {
                 robot.slides.incrementSlidePos(1);
 
             }
 
 
-            if(drivePad.wasJustPressed(GamepadKeys.Button.B)) {
+            if(intakePad.wasJustPressed(GamepadKeys.Button.B)) {
 
                 if(robot.intake.extended){
                     robot.intake.fullRetract();
@@ -116,11 +118,11 @@ public class MainTeleOp extends LinearOpMode {
 
 
 
-            if(drivePad.wasJustPressed(GamepadKeys.Button.X)) {
+            if(intakePad.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.intake.defaultPosition();
             }
 
-            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+            if(intakePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 robot.intake.armAngle=270;
 
             }

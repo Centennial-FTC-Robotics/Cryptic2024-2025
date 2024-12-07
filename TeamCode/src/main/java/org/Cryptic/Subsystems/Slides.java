@@ -42,7 +42,7 @@ public class Slides extends Subsystem {
     public CRServo wheel;
 
     public static int off = 0;
-    public int[] targets = {200, 500-off, 1100-off, 1500-off, 2135-off};
+    public int[] targets = {200, 500-off, 1100-off, 1500-off, 2150-off};
     public double manualPower = 0;
 
     public int pos = -1;
