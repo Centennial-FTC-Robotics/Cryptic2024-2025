@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
 
@@ -21,6 +22,7 @@ public class MainTeleOp extends LinearOpMode {
     private DcMotorEx slideLeft;
     private DcMotorEx slideRight;
     private DcMotorEx hangMotor;
+    public double slowModeAdjust = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,6 +64,14 @@ public class MainTeleOp extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
             double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
+            if (robot.slides.pos > 1800) {
+                double slowModeAdjust = 0.7;
+            } else {
+                double slowModeAdjust = Range.clip(1 - drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), 0, 1);
+            }
+            robot.dt.drive(gamepad1.left_stick_x, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
+
+            /*
             robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
                             -gamepad1.left_stick_y,
@@ -69,6 +79,7 @@ public class MainTeleOp extends LinearOpMode {
                     ),
                     -gamepad1.right_stick_x
             ));
+            */
 
             //robot.dt.driveBL.setPower((y - x + rx) / d);
             //robot.dt.driveBR.setPower((y + x - rx) / d);
