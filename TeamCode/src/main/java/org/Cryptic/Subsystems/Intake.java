@@ -56,7 +56,7 @@ public class Intake extends Subsystem {
 
         closeCLaw();
 
-        straightDiff();
+        defaultDiff();
 
         fullRetract();
         setArmAngle(10);
