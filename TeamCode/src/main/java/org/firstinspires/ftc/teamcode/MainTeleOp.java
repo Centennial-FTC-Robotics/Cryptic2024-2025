@@ -124,7 +124,6 @@ public class MainTeleOp extends LinearOpMode {
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 robot.intake.armAngle=270;
-
             }
             if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
 

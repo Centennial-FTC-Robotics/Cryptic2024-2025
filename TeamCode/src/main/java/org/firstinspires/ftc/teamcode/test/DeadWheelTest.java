@@ -18,10 +18,10 @@ public class DeadWheelTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        driveBL = hardwareMap.get(DcMotorEx.class, "backLeft");
-        driveBR = hardwareMap.get(DcMotorEx.class, "backRight");
-        driveFL = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        driveFR = hardwareMap.get(DcMotorEx.class, "frontRight");
+        driveBL = hardwareMap.get(DcMotorEx.class, "leftBack");
+        driveBR = hardwareMap.get(DcMotorEx.class, "rightBack");
+        driveFL = hardwareMap.get(DcMotorEx.class, "leftFront");
+        driveFR = hardwareMap.get(DcMotorEx.class, "rightFront");
 
         driveBL.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -30,9 +30,15 @@ public class DeadWheelTest extends LinearOpMode {
         driveFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // par0: rightFront
-        // par1: rightBack
-        //perp: leftBack
+        driveBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // par0: rightFront, negative
+        // par1: rightBack, negative
+        //perp: leftBack, negative
+        // left is positive
 
         waitForStart();
         while(opModeIsActive()) {
