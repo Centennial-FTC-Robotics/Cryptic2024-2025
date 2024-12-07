@@ -20,7 +20,7 @@ public class Intake extends Subsystem {
 
     private boolean startIntake;
 
-    public final double maxExtend = .95;
+    public fi nal double maxExtend = .95;
     public final double minExtend = .22;
 
     public final double clawCloseValue = .13;
