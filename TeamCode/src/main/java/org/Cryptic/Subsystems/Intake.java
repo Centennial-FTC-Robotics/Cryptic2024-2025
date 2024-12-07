@@ -17,6 +17,9 @@ public class Intake extends Subsystem {
     public Servo rightArmServo;
 
     public boolean extended = false;
+
+    private boolean startIntake;
+
     public final double maxExtend = .95;
     public final double minExtend = .22;
 
@@ -27,6 +30,15 @@ public class Intake extends Subsystem {
     public double extendValue;
 
     public int armAngle;
+
+
+
+    public int clawRotate;
+    public int clawSpin;
+
+    private boolean defaultPos;
+
+
 
 
 
@@ -44,7 +56,7 @@ public class Intake extends Subsystem {
 
         closeCLaw();
 
-        defaultDiff();
+        straightDiff();
 
         fullRetract();
         setArmAngle(10);
@@ -56,13 +68,53 @@ public class Intake extends Subsystem {
     }
 
     public void straightDiff(){
-        leftClawServo.setPosition(.5);
-        rightClawServo.setPosition(.5);
+
+        clawRotate = 0;
     }
 
     public void defaultDiff(){
-        leftClawServo.setPosition(1);
-        rightClawServo.setPosition(0);
+
+        clawRotate = 90;
+    }
+
+    public void defaultPosition(){
+        defaultPos=true;
+
+    }
+
+
+
+
+
+    public void setClawPos(int pitch){
+        pitch = Range.clip(pitch,0,180);
+
+
+        Double pitchVal = Range.scale(pitch,0.0,180.0,0.0,1.0);
+
+            double spinVal = 0;
+
+            if(spinCounter ==0){
+                spinVal = 0;
+            }
+            else if(spinCounter == -1){
+                spinVal = -.25;
+            }
+            else if(spinCounter == -2){
+                spinVal = -.5;
+            }
+            else if(spinCounter ==1){
+                spinVal = .25;
+            }
+            else if(spinCounter == 2){
+                spinVal = .5;
+            }
+
+
+            leftClawServo.setPosition(Range.clip((1-pitchVal)+spinVal,0,1));
+            rightClawServo.setPosition(Range.clip(((pitchVal)) + spinVal,0,1));
+
+
     }
 
     public void setArmAngle(int angle){
@@ -70,8 +122,8 @@ public class Intake extends Subsystem {
 
 
 
-        if (!robot.slides.canOuttake){
-            maxValue = 60;
+        if (!robot.slides.canOuttake || extendValue>10){
+            maxValue = 40;
         }
 
 
@@ -82,10 +134,16 @@ public class Intake extends Subsystem {
         leftArmServo.setPosition(1-armValue);
     }
 
+    public int getArmAngle(){
+
+        return (int)Range.scale(rightArmServo.getPosition(),0,1,0,180);
+    }
+
 
 
 
     public void setExtend(double extend){
+
         extend = Range.clip(extend,0.0,100.0);
         double extendFinalValue = Range.scale(extend,0.0,100.0,minExtend,maxExtend);
         extendServo.setPosition(extendFinalValue);
@@ -100,6 +158,13 @@ public class Intake extends Subsystem {
         extended=false;
     }
 
+    public void intakeSample(){
+
+        startIntake=true;
+    }
+
+
+
     public void openClaw(){
         clawServo.setPosition(clawOpenValue);
         clawOpened=true;
@@ -109,19 +174,112 @@ public class Intake extends Subsystem {
         clawOpened=false;
     }
 
-    public void update(){
+    public void intakePosition()
+    {
+        armAngle=30;
+        clawRotate = 70;
 
-        if(armAngle>200){
+    }
+    // Class-level variables
+    private long defaultPosStartTime = 0;
+
+    private long intakeStartTime = 0;
+
+    private int intakePos = 0;
+
+    public int spinCounter = 0;
+
+    public void update() {
+
+        spinCounter = Math.max(-2,spinCounter);
+        spinCounter = Math.min(2,spinCounter);
+
+
+
+
+        if(startIntake){
+
+            if(robot.slides.pos>300){
+                startIntake=false;
+                return;
+            }
+
+            if(intakeStartTime==0){
+
+                defaultDiff();
+                armAngle = 10;
+                openClaw();
+
+                intakeStartTime = System.currentTimeMillis();
+
+
+                intakePos+=1;
+
+            }
+
+            if(System.currentTimeMillis() - intakeStartTime>300){
+                intakePos+=1;
+                intakeStartTime=System.currentTimeMillis();
+            }
+
+            if(intakePos==2){
+                intakePosition();
+            }
+
+            if(intakePos==3){
+                closeCLaw();
+            }
+            if(intakePos==4){
+                defaultDiff();
+                armAngle = 10;
+
+                spinCounter=0;
+                intakePos = 0;
+                intakeStartTime =0;
+                startIntake = false;
+            }
+
+
+
+
+        }
+        if (defaultPos) {
+            if (defaultPosStartTime == 0) {
+                spinCounter =0;
+                // Start the timer when entering default position mode
+                defaultPosStartTime = System.currentTimeMillis();
+                armAngle = 10; // Set arm angle to 10
+                extendValue = 0; // Retract the extension
+                defaultDiff(); // Set claw position
+                setArmAngle(10);
+            }
+            if (robot.slides.pos > 1800) {
+                robot.slides.retractSlides();
+                defaultPos = false; // Reset default position mode
+                defaultPosStartTime = 0; // Reset timer
+            }
+
+            // Wait for 2 seconds before retracting slides
+            else if (System.currentTimeMillis() - defaultPosStartTime > 700) {
+
+                    setArmAngle(10);
+                    robot.slides.retractSlides();
+                    defaultPos = false; // End default position mode
+                    defaultPosStartTime = 0; // Reset timer
+
+            }
+        }
+
+        if (armAngle > 200) {
             straightDiff();
         }
 
-        extended= !(extendValue < 5);
+        extended = !(extendValue < 5);
         this.setExtend(extendValue);
-
         this.setArmAngle(armAngle);
-
-
+        this.setClawPos(clawRotate);
     }
+
 
 
 }

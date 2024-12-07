@@ -101,7 +101,7 @@ public class MainTeleOp extends LinearOpMode {
 
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.X)) {
-                robot.slides.retractSlides();
+                robot.intake.defaultPosition();
             }
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
@@ -117,6 +117,20 @@ public class MainTeleOp extends LinearOpMode {
                     }
 
             }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
+                robot.intake.intakeSample();
+            }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
+                robot.intake.spinCounter-=1;
+            }
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+                robot.intake.spinCounter+=1;
+            }
+
+            telemetry.addData("Arm servo angle: ", robot.intake.getArmAngle());
+            telemetry.update();
 
 
             robot.slides.update();

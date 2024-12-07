@@ -26,7 +26,7 @@ public class Slides extends Subsystem {
 
     public static double maxDownSpeed = 0.35;
 
-    public int slidesTarget = 100;
+    public int slidesTarget = 200;
 
     public int errorSum = 0;
     public int lastError = 0;
@@ -42,7 +42,7 @@ public class Slides extends Subsystem {
     public CRServo wheel;
 
     public static int off = 0;
-    public int[] targets = {100, 500-off, 1000-off, 1500-off, 2130-off};
+    public int[] targets = {200, 500-off, 1000-off, 1500-off, 2130-off};
     public double manualPower = 0;
 
     public int pos = -1;
@@ -83,7 +83,7 @@ public class Slides extends Subsystem {
     }
 
     public void retractSlides() {
-        slidesTarget = 0;
+        slidesTarget = 200;
     }
 
     public void setWheel(double power) {
