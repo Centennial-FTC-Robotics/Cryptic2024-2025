@@ -18,7 +18,7 @@ public class Intake extends Subsystem {
 
     public boolean extended = false;
 
-    private boolean startIntake;
+    public boolean startIntake;
 
     public final double maxExtend = .95;
     public final double minExtend = .22;
@@ -36,10 +36,10 @@ public class Intake extends Subsystem {
     public int clawRotate;
     public int clawSpin;
 
-    private boolean defaultPos;
+    public boolean defaultPos;
 
-    private boolean extendAndUp;
-    private boolean extendAndDown;
+    public boolean extendAndUp;
+    public boolean extendAndDown;
 
 
 

@@ -113,7 +113,7 @@ public class MainTeleOp extends LinearOpMode {
                     robot.intake.fullRetract();
                 }
                 else{
-                    robot.intake.fullExtend();
+                    robot.intake.extendValue=80;
                 }
 
             }
