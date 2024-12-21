@@ -1,326 +1,79 @@
 package org.Cryptic.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.Cryptic.Subsystem;
+import org.Cryptic.util.Globals;
 
+@Config
 public class Intake extends Subsystem {
-    private LinearOpMode opmode;
+    public static double P = 0;
+    public static double I = 0;
+    public static double D = 0;
+    public static int targetErrorThreshold = 0;
+    public static double velErrorThreshold = 0;
 
-    public Servo extendServo;
-    public Servo clawServo;
-    public Servo rightClawServo;
-    public Servo leftClawServo;
-    public Servo leftArmServo;
-    public Servo rightArmServo;
+    public static double slidesTarget;
 
-    public boolean extended = false;
+    public static double maxSlideSpeed;
 
-    public boolean startIntake;
+    public static double pitchDown = 0.0;
+    public static double pitchUp = 0.0;
+    public static double pitchStowed = 0.0;
 
-    public final double maxExtend = .95;
-    public final double minExtend = .22;
-
-    public final double clawCloseValue = .13;
-    public final double clawOpenValue = 0;
-    public boolean clawOpened = false;
-
-    public double extendValue;
-
-    public int armAngle;
+    public static double primed = 0.0;
+    public static double notPrimed = 0.0;
 
 
+    public enum PitchState {
+        DOWN, UP, STOWED
+    }
 
-    public int clawRotate;
-    public int clawSpin;
-
-    public boolean defaultPos;
-
-    public boolean extendAndUp;
-    public boolean extendAndDown;
-
-
-
-
-
-
+    @Override
     public void init(LinearOpMode opmode) throws InterruptedException {
-        this.opmode = opmode;
+        // TODO: Initialize all components
+        // TODO: Wait a second for servos to initialize
 
-
-        clawServo = opmode.hardwareMap.get(Servo.class, "clawServo");
-        rightClawServo = opmode.hardwareMap.get(Servo.class, "leftClawServo");
-        leftClawServo = opmode.hardwareMap.get(Servo.class, "rightClawServo");
-        leftArmServo = opmode.hardwareMap.get(Servo.class, "leftArmServo");
-        rightArmServo = opmode.hardwareMap.get(Servo.class, "rightArmServo");
-        extendServo = opmode.hardwareMap.get(Servo.class, "extendServo");
-
-        closeCLaw();
-
-        defaultDiff();
-
-        fullRetract();
-        setArmAngle(10);
-
-
-        Thread.sleep(700);
-
-
+        setIntakePitch(PitchState.STOWED);
+        setPrimeIntake(false);
+        setIntakePower(0);
+        setSlidesTarget(0);
+    }
+    public Globals.SampleColor getColor() {
+        return null;
+        // TODO: Return color that color sensor detects (unknown if no color is detected)
     }
 
-    public void straightDiff(){
-
-        clawRotate = 0;
+    public void setIntakePitch(PitchState cool) {
+        // TODO: Move the active intake servos based off pitch state
     }
 
-    public void defaultDiff(){
-
-        clawRotate = 90;
+    public void setPrimeIntake(boolean primed) {
+        // TODO: Move servo to set up the intake for transfer to outtake
     }
 
-    public void defaultPosition(){
-        defaultPos=true;
-
+    public void setIntakePower(double power) {
+        // TODO: Continuous Rotation servo go spinny positive is intake negative is expel
     }
 
-
-
-
-
-    public void setClawPos(int pitch){
-        pitch = Range.clip(pitch,0,180);
-
-
-        Double pitchVal = Range.scale(pitch,0.0,180.0,0.0,1.0);
-
-            double spinVal = 0;
-
-            if(spinCounter ==0){
-                spinVal = 0;
-            }
-            else if(spinCounter == -1){
-                spinVal = -.25;
-            }
-            else if(spinCounter == -2){
-                spinVal = -.5;
-            }
-            else if(spinCounter ==1){
-                spinVal = .25;
-            }
-            else if(spinCounter == 2){
-                spinVal = .5;
-            }
-
-
-
-
-            leftClawServo.setPosition(Range.clip((1-pitchVal)+spinVal,0,1));
-            rightClawServo.setPosition(Range.clip(((pitchVal)) + spinVal,0,1));
-
-
+    public void setSlidesTarget (double value) {
+        // TODO: Convert value (1.0 to 0.0) to encoder ticks for slides, and set that to PID target
     }
-
-    public void setArmAngle(int angle){
-        int maxValue = 270;
-
-
-
-        if (robot.slides.pos<1000 || extendValue>10){
-            maxValue = 40;
-        }
-
-
-
-
-
-        angle = Range.clip(angle,0,maxValue);
-        double armValue = Range.scale(angle,0,270,0,1);
-
-        rightArmServo.setPosition(armValue);
-        leftArmServo.setPosition(1-armValue);
-    }
-
-    public int getArmAngle(){
-
-        return (int)Range.scale(rightArmServo.getPosition(),0,1,0,180);
-    }
-
-
-    public void setExtend(double extend){
-
-        extend = Range.clip(extend,0.0,100.0);
-        double extendFinalValue = Range.scale(extend,0.0,100.0,minExtend,maxExtend);
-        extendServo.setPosition(extendFinalValue);
-    }
-
-    public void fullExtend(){
-        extendAndUp = true;
-        extendAndDown = false;
-        extended = true;
-
-
-    }
-
-    public void fullRetract(){
-        extendAndDown = true;
-        extendAndUp = false;
-
-        extended=false;
-
-
-    }
-
-    public void intakeSample(){
-
-        startIntake=true;
-    }
-
-
-
-    public void openClaw(){
-        clawServo.setPosition(clawOpenValue);
-        clawOpened=true;
-    }
-    public void closeCLaw(){
-        clawServo.setPosition(clawCloseValue);
-        clawOpened=false;
-    }
-
-    public void intakePosition()
-    {
-        armAngle=25;
-        clawRotate = 65;
-
-    }
-    public void intakeExtendPosition(){
-        armAngle=22;
-        clawRotate = 68;
-    }
-    // Class-level variables
-    private long defaultPosStartTime = 0;
-
-    private long intakeStartTime = 0;
-
-    private long extendStartTime = 0;
-    private int intakePos = 0;
-
-    public int spinCounter = 0;
 
     public void update() {
-
-        spinCounter = Math.max(-2,spinCounter);
-        spinCounter = Math.min(2,spinCounter);
-
-        if(extendAndDown || extendAndUp){
-            if(extendStartTime == 0 ){
-                robot.slides.slidesTarget=250;
-                extendStartTime = System.currentTimeMillis();
-            }
-
-
-
-            if(System.currentTimeMillis()-extendStartTime>100){
-                if(extendAndUp) {
-                    extendValue = 100;
-                }else if(extendAndDown){
-                    extendValue=0;
-                }
-            }
-            if(System.currentTimeMillis()-extendStartTime>800){
-                robot.slides.slidesTarget=175;
-
-                extendStartTime = 0;
-
-                extendAndDown = false;
-                extendAndUp = false;
-            }
-        }
-
-        if(startIntake){
-            robot.slides.retractSlides();
-
-            if(robot.slides.pos>300){
-                startIntake=false;
-                return;
-            }
-
-            if(intakeStartTime==0){
-
-                defaultDiff();
-                armAngle = 10;
-                openClaw();
-
-                intakeStartTime = System.currentTimeMillis();
-
-
-                intakePos+=1;
-
-            }
-
-            if(System.currentTimeMillis() - intakeStartTime>300){
-                intakePos+=1;
-                intakeStartTime=System.currentTimeMillis();
-            }
-
-            if(intakePos==2){
-
-                if(extendValue<30) {
-                    intakePosition();
-                }else{
-                    intakeExtendPosition();
-                }
-            }
-
-            if(intakePos==3){
-                closeCLaw();
-            }
-            if(intakePos==4){
-                defaultDiff();
-                armAngle = 10;
-
-                spinCounter=0;
-                intakePos = 0;
-                intakeStartTime =0;
-                startIntake = false;
-            }
-
-        }
-        if (defaultPos) {
-            if (defaultPosStartTime == 0) {
-                spinCounter =0;
-                // Start the timer when entering default position mode
-                defaultPosStartTime = System.currentTimeMillis();
-                armAngle = 10; // Set arm angle to 10
-                 // Retract the extension
-                defaultDiff(); // Set claw position
-                setArmAngle(10);
-            }
-            if (robot.slides.pos > 1850 ) {
-                robot.slides.retractSlides();
-                defaultPos = false; // Reset default position mode
-                defaultPosStartTime = 0; // Reset timer
-            }
-
-            // Wait for 2 seconds before retracting slides
-            else if (System.currentTimeMillis() - defaultPosStartTime > 750) {
-
-                    setArmAngle(10);
-                    robot.slides.retractSlides();
-                    defaultPos = false; // End default position mode
-                    defaultPosStartTime = 0; // Reset timer
-
-            }
-        }
-
-        if (armAngle > 200) {
-            clawRotate = 0;
-        }
-
-        extended = !(extendValue < 5);
-        this.setExtend(extendValue);
-        this.setArmAngle(armAngle);
-        this.setClawPos(clawRotate);
+        // TODO: Use PID to move slides and obey max speed
     }
+
+    public boolean areSlidesFinished() {
+        // TODO: Return whether slides are within certain threshold and motor velocity is close to 0
+        return false;
+    }
+
+    // horizontal slides
+    // pitching intake
+    // actually intaking
+    // priming
+    // color detection
 }
