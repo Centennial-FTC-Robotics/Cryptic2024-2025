@@ -19,7 +19,7 @@ public class MeepMeepTesting {
 
         double t = 23.5;
 
-        // (NEW USING RRPathGen) 3 Specimen Auto
+        // (NEW) 3 Specimen Auto
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(t*-0.5, t*2.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(-9.73, 35.77), Math.toRadians(270))
                 .setTangent(Math.toRadians(180))
