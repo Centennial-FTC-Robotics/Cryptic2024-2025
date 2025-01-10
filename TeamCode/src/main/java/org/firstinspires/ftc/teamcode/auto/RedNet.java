@@ -19,6 +19,7 @@ public class RedNet extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        /*
         Robot robot = new Robot();
         robot.initialize(this);
         robot.dt.initNoRoadRunner(this);
@@ -108,7 +109,6 @@ public class RedNet extends LinearOpMode {
         robot.dt.driveDistance(36);
         robot.dt.turnToHeading(0);
         robot.dt.driveDistance(12);
-*/
 
     }
 
@@ -160,6 +160,6 @@ public class RedNet extends LinearOpMode {
 
             robot.slides.update();
         }
-
+*/
     }
 }

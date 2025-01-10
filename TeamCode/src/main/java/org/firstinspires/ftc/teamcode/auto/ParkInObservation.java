@@ -12,11 +12,11 @@ public class ParkInObservation extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot();
         robot.initialize(this);
-        robot.dt.initNoRoadRunner(this);
+        //robot.dt.initNoRoadRunner(this);
 
         waitForStart();
 
-        robot.dt.driveDistance(24);
+        //robot.dt.driveDistance(24);
     }
 }
 

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -14,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
+import org.Cryptic.util.Globals;
 
 @Config
 @TeleOp (name = "MainTeleOp")
@@ -32,6 +35,7 @@ public class MainTeleOp extends LinearOpMode {
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
         GamepadEx intakePad = new GamepadEx(gamepad2);
+
         //robot.dt.initTeleOp();
 
         //jfyfyf
@@ -58,9 +62,34 @@ public class MainTeleOp extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            TelemetryPacket packet = new TelemetryPacket();
             drivePad.readButtons();
             intakePad.readButtons();
 
+            robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
+                    new Vector2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x
+                    ),
+                    -gamepad1.right_stick_x
+            ));
+
+            if (robot.intake.getColor() == Globals.SampleColor.BLUE) {
+                telemetry.addData("Color", "BLUE");
+            }
+            if (robot.intake.getColor() == Globals.SampleColor.RED) {
+                telemetry.addData("Color", "RED");
+            }
+            if (robot.intake.getColor() == Globals.SampleColor.YELLOW) {
+                telemetry.addData("Color", "YELLOW");
+            }
+
+            robot.intake.intakeMotor.setPower(intakePad.getLeftY());
+
+            robot.intake.setSlidesPower(intakePad.getRightY());
+        }
+
+/*
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
@@ -78,15 +107,15 @@ public class MainTeleOp extends LinearOpMode {
 
             robot.dt.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, slowModeAdjust);
 
-            /*
-            robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
-                    new Vector2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x
-                    ),
-                    -gamepad1.right_stick_x
-            ));
-            */
+
+            //robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
+            //        new Vector2d(
+            //                -gamepad1.left_stick_y,
+            //                -gamepad1.left_stick_x
+            //        ),
+            //        -gamepad1.right_stick_x
+            //));
+
 
             //robot.dt.driveBL.setPower((y - x + rx) / d);
             //robot.dt.driveBR.setPower((y + x - rx) / d);
@@ -116,6 +145,8 @@ public class MainTeleOp extends LinearOpMode {
 
 
 
+            gamepad1.x;
+            intakePad.wasJustPressed(GamepadKeys.Button.X);
 
 
             if(intakePad.wasJustPressed(GamepadKeys.Button.X)) {
@@ -157,5 +188,6 @@ public class MainTeleOp extends LinearOpMode {
             telemetry.update();
 
         }
+        */
     }
 }

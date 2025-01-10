@@ -16,6 +16,7 @@ public class BlueNet extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        /*
         Robot robot = new Robot();
         robot.initialize(this);
         robot.dt.initNoRoadRunner(this);
@@ -109,7 +110,7 @@ public class BlueNet extends LinearOpMode {
         robot.dt.turnToHeading(180);
         robot.dt.driveDistance(12);
 
-
+*/
     }
 }
 
