@@ -122,7 +122,7 @@ public class Intake extends Subsystem {
     }
 
     public void setIntakePower(double power) {
-        // TODO: Continuous Rotation servo go spinny positive is intake negative is expel
+        intakeMotor.setPower(power);
     }
 
     public void setSlidesTarget (double value) {
