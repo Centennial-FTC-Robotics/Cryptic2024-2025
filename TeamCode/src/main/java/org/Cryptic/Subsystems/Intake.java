@@ -76,6 +76,7 @@ public class Intake extends Subsystem {
         color = opmode.hardwareMap.get(ColorSensor.class, "color");
         intakeMotor = opmode.hardwareMap.get(DcMotorEx.class, "intakeMotor");
         slidesMotor = opmode.hardwareMap.get(DcMotorEx.class, "slidesMotor");
+        transferServo = opmode.hardwareMap.get(Servo.class, "transferServo");
 
         while(slidesMotor.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
             slidesMotor.setPower(-0.4);
@@ -114,10 +115,28 @@ public class Intake extends Subsystem {
 
     public void setIntakePitch(PitchState cool) {
         // TODO: Move the active intake servos based off pitch state
+        switch (cool) {
+            case DOWN:
+                leftPitchServo.setPosition(pitchDown);
+                rightPitchServo.setPosition(pitchDown);
+                break;
+            case UP:
+                leftPitchServo.setPosition(pitchUp);
+                rightPitchServo.setPosition(pitchUp);
+                break;
+            case STOWED:
+                leftPitchServo.setPosition(pitchStowed);
+                rightPitchServo.setPosition(pitchStowed);
+        }
     }
 
     public void setPrimeIntake(boolean primed) {
         // TODO: Move servo to set up the intake for transfer to outtake
+        if (primed) {
+            transferServo.setPosition(0.5);
+        } else {
+            transferServo.setPosition(0.0);
+        }
         isPrimed = primed;
     }
 

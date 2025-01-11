@@ -8,18 +8,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp
 public class ColorSensorTest extends LinearOpMode {
-    // Define a variable for our color sensor
 
+    public DcMotorEx motor;
 
     @Override
     public void runOpMode() {
-        // Get the color sensor from hardwareMap
+        motor = hardwareMap.get(DcMotorEx.class, "slidesMotor");
 
-        // Wait for the Play button to be pressed
         waitForStart();
 
-        // While the Op Mode is running, update the telemetry values.
         while (opModeIsActive()) {
+            motor.setPower(gamepad1.right_stick_y);
 
         }
     }

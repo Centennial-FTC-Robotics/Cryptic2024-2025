@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
 import org.Cryptic.util.Globals;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 @TeleOp (name = "MainTeleOp")
@@ -31,7 +32,7 @@ public class MainTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot();
 
-        robot.initialize(this);
+        robot.dt.init(this);
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
         GamepadEx intakePad = new GamepadEx(gamepad2);
@@ -74,6 +75,7 @@ public class MainTeleOp extends LinearOpMode {
                     -gamepad1.right_stick_x
             ));
 
+            /*
             if (robot.intake.getColor() == Globals.SampleColor.BLUE) {
                 telemetry.addData("Color", "BLUE");
             }
@@ -85,8 +87,8 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             robot.intake.intakeMotor.setPower(intakePad.getLeftY());
-
-            robot.intake.setSlidesPower(intakePad.getRightY());
+            */
+            //robot.intake.setSlidesPower(intakePad.getRightY());
         }
 
 /*
