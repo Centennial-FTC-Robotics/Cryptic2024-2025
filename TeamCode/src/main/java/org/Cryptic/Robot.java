@@ -2,6 +2,7 @@ package org.Cryptic;
 
 import org.Cryptic.Subsystems.Drivetrain;
 import org.Cryptic.Subsystems.IMU;
+import org.Cryptic.Subsystems.Outtake;
 import org.Cryptic.Subsystems.Slides;
 import org.Cryptic.Subsystems.Intake;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,12 +11,14 @@ public class Robot {
     public Drivetrain dt = new Drivetrain();
     public Slides slides = new Slides();
     public Intake intake = new Intake();
+    public Outtake outtake = new Outtake();
     public IMU imu = new IMU();
 
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
             slides,
             intake,
+            outtake
             //imu
     };
 

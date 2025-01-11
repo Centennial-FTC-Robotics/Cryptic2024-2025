@@ -75,6 +75,8 @@ public class MainTeleOp extends LinearOpMode {
                     -gamepad1.right_stick_x
             ));
 
+
+
             /*
             if (robot.intake.getColor() == Globals.SampleColor.BLUE) {
                 telemetry.addData("Color", "BLUE");

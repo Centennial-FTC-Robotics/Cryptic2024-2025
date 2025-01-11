@@ -1,5 +1,6 @@
 package org.Cryptic.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.Cryptic.Subsystem;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+@Config
 public class Outtake extends Subsystem {
 
     public static double slideP = 0.005;
@@ -59,7 +61,7 @@ public class Outtake extends Subsystem {
     public int pos = -1;
 
     // Claw stuff
-    public static double clawOpenVal = 0, clawClosedVal = 0.13;
+    public static double clawOpenVal = 0.45, clawClosedVal = 0.80;
 
     private LinearOpMode opmode;
 
@@ -76,6 +78,9 @@ public class Outtake extends Subsystem {
         extendServo = opmode.hardwareMap.get(Servo.class, "extendServo");
 
         slideMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        rightClawServo.setDirection(Servo.Direction.REVERSE);
 
         slideMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -93,7 +98,7 @@ public class Outtake extends Subsystem {
 
         Thread.sleep(700);
 
-        slideMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //slideMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -172,6 +177,14 @@ public class Outtake extends Subsystem {
         }else{
             clawServo.setPosition(clawClosedVal);
         }
+    }
+
+    public void setClawPitch(int pitch) {
+        pitch = Range.clip(pitch, 0, 180);
+        double nPitch = Range.scale(pitch, 0.0, 180.0, 0.0, 1.0);
+
+        leftClawServo.setPosition(nPitch);
+        rightClawServo.setPosition(nPitch);
     }
 
 
