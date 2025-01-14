@@ -53,6 +53,7 @@ public class MainTeleOp extends LinearOpMode {
 
             robot.intake.update();
             robot.verticalSlides.update();
+            robot.outtake.update();
             // robot.outtake.update?
 
             robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
@@ -76,22 +77,10 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             // Outtake Forward
-            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                robot.outtake.setClawPos(0);
-                robot.outtake.setArmAngle(Outtake.OuttakePitchState.FRONT);
-            }
+
 
             // Outtake Back
-            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-                robot.outtake.setClawPos(180);
-                robot.outtake.setArmAngle(Outtake.OuttakePitchState.BACK);
-            }
 
-            // Position Outtake for Specimens
-            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                robot.outtake.setClawPos(0);
-                robot.outtake.setArmAngle(Outtake.OuttakePitchState.SAMPLE);
-            }
 
             // Position Outtake down for transfer
             if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
@@ -99,7 +88,7 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             // Grab Samples/Specimens
-            robot.outtake.clawGrab(bReader.getState());
+
 
 
 
