@@ -1,7 +1,13 @@
 package org.Cryptic.Subsystems;
 
+import android.app.Notification;
+
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +19,8 @@ import org.Cryptic.Subsystem;
 import org.Cryptic.util.Globals;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
+import kotlin.OverloadResolutionByLambdaReturnType;
 
 @Config
 public class Intake extends Subsystem {
@@ -195,8 +203,7 @@ public class Intake extends Subsystem {
     }
 
     public boolean areSlidesFinished() {
-        // TODO: Return whether slides are within certain threshold and motor velocity is close to 0
-        return false;
+        return (Math.abs(pos - slidesTarget) < errorThreshold);
     }
 
     public boolean getPrimeIntake(){
@@ -215,10 +222,31 @@ public class Intake extends Subsystem {
         this.manualPower = power;
     }
 
-    // horizontal slides
-    // pitching intake
-    // actually intaking
-    // priming
-    // color detection
+    public class IntakeSlidesUpdate implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            update();
+            return true;
+        }
+    }
+
+    public class ExtendIntakeToPosition implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setIntakePitch(PitchState.DOWN);
+            setSlidesTarget(980);
+            return !areSlidesFinished();
+        }
+    }
+
+    public class RetractIntake implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setSlidesTarget(20);
+            setIntakePitch(PitchState.STOWED);
+            return !areSlidesFinished();
+        }
+    }
+
 }
 

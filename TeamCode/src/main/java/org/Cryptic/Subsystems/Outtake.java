@@ -1,6 +1,10 @@
 package org.Cryptic.Subsystems;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -111,6 +115,17 @@ public class Outtake extends Subsystem {
         setExtend(extendValue);
         setArmAngle(armAngle);
         setClawPos(clawRotate);
+    }
+
+    public class OpenClaw implements Action {
+        boolean initialized = false;
+        @Override
+        public boolean run (@NonNull TelemetryPacket telemetryPacket) {
+            if (!initialized) {
+                clawGrab(false);
+            }
+            return false;
+        }
     }
 
 
