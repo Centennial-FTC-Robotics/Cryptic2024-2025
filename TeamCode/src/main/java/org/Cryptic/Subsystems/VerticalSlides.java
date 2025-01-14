@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Subsystem;
 
-public class Slides extends Subsystem {
+public class VerticalSlides extends Subsystem {
 
     public static double slideP = 0.005;
     public static double slideI = 0.0001;

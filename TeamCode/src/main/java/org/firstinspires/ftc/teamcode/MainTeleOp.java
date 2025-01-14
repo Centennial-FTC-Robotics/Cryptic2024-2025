@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +17,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
+import org.Cryptic.Subsystems.Intake;
+import org.Cryptic.Subsystems.Outtake;
 import org.Cryptic.util.Globals;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -23,49 +26,34 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @TeleOp (name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
 
-    private DcMotorEx slideLeft;
-    private DcMotorEx slideRight;
-    private DcMotorEx hangMotor;
-    public double slowModeAdjust = 0;
-
     @Override
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot();
-
-        robot.dt.init(this);
+        robot.initialize(this);
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
         GamepadEx intakePad = new GamepadEx(gamepad2);
 
-        //robot.dt.initTeleOp();
+        ToggleButtonReader bReader = new ToggleButtonReader(
+                drivePad, GamepadKeys.Button.B
+        );
 
-        //jfyfyf
-
-        /*
-        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
-        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
-        */
-//        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
-
-        /*
-        slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        */
-
-
-        /*
-        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        */
-//        hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        ToggleButtonReader bIntakeReader = new ToggleButtonReader(
+                intakePad, GamepadKeys.Button.B
+        );
 
         waitForStart();
         while (opModeIsActive()) {
             TelemetryPacket packet = new TelemetryPacket();
+
             drivePad.readButtons();
             intakePad.readButtons();
+            bReader.readValue();
+            bIntakeReader.readValue();
+
+            robot.intake.update();
+            robot.verticalSlides.update();
+            // robot.outtake.update?
 
             robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
@@ -75,23 +63,81 @@ public class MainTeleOp extends LinearOpMode {
                     -gamepad1.right_stick_x
             ));
 
+            packet.put("Color: ", robot.intake.getColor());
 
-
-            /*
-            if (robot.intake.getColor() == Globals.SampleColor.BLUE) {
-                telemetry.addData("Color", "BLUE");
-            }
-            if (robot.intake.getColor() == Globals.SampleColor.RED) {
-                telemetry.addData("Color", "RED");
-            }
-            if (robot.intake.getColor() == Globals.SampleColor.YELLOW) {
-                telemetry.addData("Color", "YELLOW");
+            // Extend Slides
+            if (drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                robot.verticalSlides.incrementSlidePos(1);
             }
 
-            robot.intake.intakeMotor.setPower(intakePad.getLeftY());
-            */
-            //robot.intake.setSlidesPower(intakePad.getRightY());
+            // Retract Slides
+            if (drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                robot.verticalSlides.retractSlides();
+            }
+
+            // Outtake Forward
+            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                robot.outtake.setClawPos(0);
+                robot.outtake.setArmAngle(Outtake.OuttakePitchState.FRONT);
+            }
+
+            // Outtake Back
+            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                robot.outtake.setClawPos(180);
+                robot.outtake.setArmAngle(Outtake.OuttakePitchState.BACK);
+            }
+
+            // Position Outtake for Specimens
+            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                robot.outtake.setClawPos(0);
+                robot.outtake.setArmAngle(Outtake.OuttakePitchState.SAMPLE);
+            }
+
+            // Position Outtake down for transfer
+            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                // Need to change Axon positioning to 0 to 270
+            }
+
+            // Grab Samples/Specimens
+            robot.outtake.clawGrab(bReader.getState());
+
+
+
+
+            // GAMEPAD 2
+
+            // Move Horizontal Slides Manually
+            robot.intake.setManualSlidePower(intakePad.getRightY());
+
+            // Increment Horizontal Slides
+            if (intakePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                robot.intake.incrementSlidesTarget(0.1);
+            }
+
+            // Retract Horizontal Slides
+            if (intakePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                robot.intake.retractSlides();
+            }
+
+            // Move Intake Down
+            if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                robot.intake.setIntakePitch(Intake.PitchState.DOWN);
+            }
+
+            // Move Intake Up
+            if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                robot.intake.setIntakePitch(Intake.PitchState.UP);
+            }
+
+            // Set Up Intake for Transfer
+            robot.intake.setPrimeIntake(bIntakeReader.getState());
+
+            // Move Intake Rollers
+            robot.intake.setIntakePower(intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+
         }
+    }
+}
 
 /*
             double y = -gamepad1.left_stick_y;
@@ -193,5 +239,3 @@ public class MainTeleOp extends LinearOpMode {
 
         }
         */
-    }
-}

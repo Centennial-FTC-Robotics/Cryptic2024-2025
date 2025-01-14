@@ -30,9 +30,6 @@ public class Intake extends Subsystem {
     public static double pitchUp = 0.0;
     public static double pitchStowed = 0.0;
 
-    public static double primed = 0.0;
-    public static double notPrimed = 0.0;
-
     private boolean isPrimed;
     private double sTarget;
 
@@ -77,6 +74,8 @@ public class Intake extends Subsystem {
         intakeMotor = opmode.hardwareMap.get(DcMotorEx.class, "intakeMotor");
         slidesMotor = opmode.hardwareMap.get(DcMotorEx.class, "slidesMotor");
         transferServo = opmode.hardwareMap.get(Servo.class, "transferServo");
+        leftPitchServo = opmode.hardwareMap.get(Servo.class, "leftPitchServo");
+        rightPitchServo = opmode.hardwareMap.get(Servo.class, "rightPitchServo");
 
         while(slidesMotor.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
             slidesMotor.setPower(-0.4);
@@ -133,9 +132,9 @@ public class Intake extends Subsystem {
     public void setPrimeIntake(boolean primed) {
         // TODO: Move servo to set up the intake for transfer to outtake
         if (primed) {
-            transferServo.setPosition(0.5);
+            transferServo.setPosition(0.55);
         } else {
-            transferServo.setPosition(0.0);
+            transferServo.setPosition(0.8);
         }
         isPrimed = primed;
     }
@@ -147,6 +146,14 @@ public class Intake extends Subsystem {
     public void setSlidesTarget (double value) {
         // TODO: Convert value (1.0 to 0.0) to encoder ticks for slides, and set that to PID target
         sTarget = (int)(980 * value);
+    }
+
+    public void incrementSlidesTarget(double value) {
+        sTarget += value;
+    }
+
+    public void retractSlides() {
+        sTarget = 10;
     }
 
     public void update() {
@@ -200,7 +207,6 @@ public class Intake extends Subsystem {
         return sTarget;
     }
 
-
     public void setManualSlidePower(double power) {
         if(Math.abs(power) < 0.05 || (power < 0 && pos < targets[1])) {
             this.manualPower = 0;
@@ -215,3 +221,4 @@ public class Intake extends Subsystem {
     // priming
     // color detection
 }
+
