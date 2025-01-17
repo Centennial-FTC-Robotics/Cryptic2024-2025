@@ -52,8 +52,9 @@ public class MainTeleOp extends LinearOpMode {
             bIntakeReader.readValue();
 
             robot.intake.update();
-            robot.verticalSlides.update();
+            robot.intakeSlides.update();
             robot.outtake.update();
+            robot.verticalSlides.update();
             // robot.outtake.update?
 
             robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
@@ -87,25 +88,25 @@ public class MainTeleOp extends LinearOpMode {
                 // Need to change Axon positioning to 0 to 270
             }
 
-            // Grab Samples/Specimens
-
-
-
+            // SPECIMENS
+            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                robot.outtake.intakeSpecimenPos();
+            }
 
 
             // GAMEPAD 2
 
             // Move Horizontal Slides Manually
-            robot.intake.setManualSlidePower(intakePad.getRightY());
+            robot.intakeSlides.setManualSlidePower(intakePad.getRightY());
 
             // Increment Horizontal Slides
             if (intakePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.intake.incrementSlidePos(1);
+                robot.intakeSlides.incrementSlidePos(1);
             }
 
             // Retract Horizontal Slides
             if (intakePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                robot.intake.retractSlides();
+                robot.intakeSlides.retractSlides();
             }
 
             // Move Intake Down
@@ -114,21 +115,22 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             // Move Intake Up
-            if (intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)>0) {
-                robot.intake.setIntakePitch(Intake.PitchState.UP);
-            }else{
+            if (intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.05) {
                 robot.intake.setIntakePitch(Intake.PitchState.DOWN);
-            }
-
-            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
-                robot.outtake.intakeSpecimenPos();
+            } else {
+                robot.intake.setIntakePitch(Intake.PitchState.UP);
             }
 
             // Set Up Intake for Transfer
-            robot.intake.setPrimeIntake(bIntakeReader.getState());
+            //robot.intake.setPrimeIntake(bIntakeReader.getState());
 
             // Move Intake Rollers
             robot.intake.setIntakePower(intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+
+            // Samples Automation
+            if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                robot.intake.gamepadToTransferIntakeOuttake();
+            }
 
         }
     }

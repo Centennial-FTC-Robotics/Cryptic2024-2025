@@ -3,6 +3,7 @@ package org.Cryptic;
 import org.Cryptic.Subsystems.ClawArm;
 import org.Cryptic.Subsystems.Drivetrain;
 import org.Cryptic.Subsystems.IMU;
+import org.Cryptic.Subsystems.IntakeSlides;
 import org.Cryptic.Subsystems.Outtake;
 import org.Cryptic.Subsystems.VerticalSlides;
 import org.Cryptic.Subsystems.Intake;
@@ -12,6 +13,7 @@ public class Robot {
     public Drivetrain dt = new Drivetrain();
     public VerticalSlides verticalSlides = new VerticalSlides();
     public Intake intake = new Intake();
+    public IntakeSlides intakeSlides = new IntakeSlides();
     public ClawArm clawArm = new ClawArm();
     public Outtake outtake = new Outtake(clawArm);
     public IMU imu = new IMU();
@@ -19,9 +21,11 @@ public class Robot {
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
             verticalSlides,
-            intake,
+            // outtake depends on clawArm
             clawArm,
-            outtake
+            outtake,
+            intake,
+            intakeSlides
             //imu
     };
 

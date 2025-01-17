@@ -15,19 +15,22 @@ import org.Cryptic.Subsystem;
 public class Outtake extends Subsystem {
     public Servo extendServo;
 
-    public final double maxExtend = .22;
-    public final double minExtend = .95;
+    public static final double maxExtend = .22;
+    public static final double minExtend = .95;
 
     public boolean extendValue;
 
     public ClawArm claw;
 
 
-    public int armAngle;
+    public static int armAngle;
 
-    public int clawAngle;
+    public static int clawAngle;
 
-    public int clawYaw;
+    public static int clawYaw;
+
+    public static double gripperAngle = 0.66;
+
 
     private LinearOpMode opmode;
 
@@ -42,12 +45,9 @@ public class Outtake extends Subsystem {
         extendServo = opmode.hardwareMap.get(Servo.class, "extendServo");
 
         defaultPos();
-        claw.openClaw();
-
+        update();
         setExtend(false);
-
-
-
+        Thread.sleep(700);
 
 
     }
@@ -64,7 +64,7 @@ public class Outtake extends Subsystem {
     public void defaultPos(){
 
         armAngle = 90;
-        clawAngle = 90;
+        clawAngle = 180;
         clawYaw = 0;
 
     }
@@ -117,6 +117,7 @@ public class Outtake extends Subsystem {
 
     public void update() {
 
+        claw.setGripperPos(gripperAngle);
 
         claw.setArmAngle(armAngle);
 

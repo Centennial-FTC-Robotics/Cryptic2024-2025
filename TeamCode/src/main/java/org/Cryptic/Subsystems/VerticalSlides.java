@@ -21,9 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @Config
 public class VerticalSlides extends Subsystem {
 
-    public static double slideP = 0.0003;
-    public static double slideI = 0.0001;
-    public static double slideD = 0.1;
+    public static double slideP = 0.005;
+    public static double slideI = 0.0;
+    public static double slideD = 0.0;
     public static double slideF = 0.1;
     public static int errorThreshold = 5;
     public final int intakeArmThreshold = 900;
@@ -33,7 +33,8 @@ public class VerticalSlides extends Subsystem {
     public static double pivotFlat = 0.42;
     public static double pivotUp = 0.73;
 
-    public static double maxDownSpeed = 0.35;
+    public static double maxUpSpeed = 1.0;
+    public static double maxDownSpeed = 0.15;
 
     public int slidesTarget = 10;
 
@@ -148,8 +149,8 @@ public class VerticalSlides extends Subsystem {
             power = Range.clip(manualPower + slideF, -1, 1);
             slidesTarget = pos;
         } else {
-            power = Range.clip(error*slideP + errorSum*slideI + +speed*slideD + slideF,
-                    -maxDownSpeed, 1);
+            power = Range.clip(error*slideP + errorSum*slideI + speed*slideD + slideF,
+                    -maxDownSpeed, maxUpSpeed);
         }
 
         slideMotorL.setPower(power);

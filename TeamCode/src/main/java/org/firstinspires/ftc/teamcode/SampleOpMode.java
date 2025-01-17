@@ -54,8 +54,8 @@ public class SampleOpMode extends LinearOpMode {
             }
 
             if(intakePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-                if(robot.intake.getSlidesTarget()+0.2<=1.0)
-                    robot.intake.setSlidesTarget(robot.intake.getSlidesTarget()+0.2);
+                //if(robot.intake.getSlidesTarget()+0.2<=1.0)
+                    //robot.intake.setSlidesTarget(robot.intake.getSlidesTarget()+0.2);
             }
 
 //            if(intakePad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
@@ -64,7 +64,7 @@ public class SampleOpMode extends LinearOpMode {
 //            }
             
             if(intakePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                robot.intake.setSlidesTarget(0.0);
+                //robot.intake.setSlidesTarget(0.0);
             }
 
             robot.intake.setIntakePower(gamepad1.left_stick_y);

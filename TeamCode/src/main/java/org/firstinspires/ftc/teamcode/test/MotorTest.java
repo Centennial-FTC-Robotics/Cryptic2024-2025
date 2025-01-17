@@ -18,7 +18,7 @@ public class MotorTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        motor = hardwareMap.get(DcMotorEx.class, "slideLeft");
+        motor = hardwareMap.get(DcMotorEx.class, "slidesMotor");
         motor2 = hardwareMap.get(DcMotorEx.class, "slideRight");
         FtcDashboard dashboard = FtcDashboard.getInstance();
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -29,8 +29,8 @@ public class MotorTest extends LinearOpMode {
 
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("Motor Current", motor.getCurrent(CurrentUnit.AMPS));
-            packet.put("Motor2 Current", motor.getCurrent(CurrentUnit.AMPS));
-            packet.put("Motor Position", motor2.getCurrentPosition());
+            packet.put("Motor2 Current", motor2.getCurrent(CurrentUnit.AMPS));
+            packet.put("Motor Position", motor.getCurrentPosition());
             packet.put("Gamepad", gamepad1.right_stick_y);
             packet.put("status", "alive");
 

@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Subsystem;
+
+@Config
 public class ClawArm extends Subsystem{
 
     public Servo clawServo;
@@ -19,10 +21,12 @@ public class ClawArm extends Subsystem{
     public Servo leftArmServo;
     public Servo rightArmServo;
 
-    public final double clawCloseValue = 1;
-    public final double clawOpenValue = 0.66;
+
+    public static double gripperPos = 0.0;
 
     private boolean clawOpened;
+    public final double clawCloseValue = 1;
+    public final double clawOpenValue = 0.66;
 
     private LinearOpMode opmode;
 
@@ -36,22 +40,25 @@ public class ClawArm extends Subsystem{
         leftArmServo = opmode.hardwareMap.get(Servo.class, "leftArmServo");
         rightArmServo = opmode.hardwareMap.get(Servo.class, "rightArmServo");
 
-
-        clawServo.setPosition(.65);
-
-        setClawPos(90,0);
-        openClaw();
+        /*
+        setClawPos(180,0);
+        setGripperPos(clawOpenValue);
         setArmAngle(110);
+         */
 
 
+    }
+
+    public void setGripperPos(double position) {
+        clawServo.setPosition(Range.clip(position, clawOpenValue, clawCloseValue));
     }
 
     public void openClaw(){
-        clawServo.setPosition(clawOpenValue);
+        robot.outtake.gripperAngle = clawOpenValue;
         clawOpened=true;
     }
     public void closeCLaw(){
-        clawServo.setPosition(clawCloseValue);
+        robot.outtake.gripperAngle = clawCloseValue;
         clawOpened=false;
     }
 
@@ -60,7 +67,7 @@ public class ClawArm extends Subsystem{
     }
     public void setClawPos(int pitch,int spinCounter){
         pitch = Range.clip(pitch,0,180);
-        Double pitchVal = Range.scale(pitch,0.0,180.0,0.0,1.0);
+        double pitchVal = Range.scale(pitch,0.0,180.0,0.0,1.0);
         double spinVal = 0;
         if(spinCounter ==0){
             spinVal = 0;

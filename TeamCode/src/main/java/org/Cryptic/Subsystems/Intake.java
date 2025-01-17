@@ -31,43 +31,33 @@ public class Intake extends Subsystem {
     public static double maxSlideSpeed;
 
     public static double pitchDown = 0.5;
-    public static double pitchUp = 0.7;
+    public static double pitchUp = 0.8;
     public static double pitchStowed = 0.7;
 
     private boolean isPrimed;
-    private double sTarget;
 
     public enum PitchState {
         DOWN, UP, STOWED
     }
 
-    public static int off = 0;
-    public int[] targets = {0, 350-off, 420-off, 500-off, 580-off, 660-off, 740-off, 820-off,
-            900-off, 980-off};
-    public int maxSlidesValue = 980;
-
-    public double manualPower = 0;
-
-    // PID STUFF
-    public static int pos;
-    public static double power;
-
-    public int errorSum = 0;
-    public int lastError = 0;
-    public long lastTime = 0;
-
-    public static double slideP = 0.00025;
-    public static double slideI = 0.00005;
-    public static double slideD = 0;
-    public static double slideF = 0.1;
-    public static int errorThreshold = 5;
-
     public Servo leftPitchServo;
     public Servo rightPitchServo;
     public Servo transferServo;
     public DcMotorEx intakeMotor;
-    public DcMotorEx slidesMotor;
     public ColorSensor color;
+
+    public enum States {
+        PRIME_INTAKE,
+        PRIME_OUTTAKE,
+        POSITION_INTAKE,
+        GRAB_SAMPLE,
+        OUTTAKE_UP,
+        MOVE_OUTTAKE
+    }
+
+
+    public static PitchState pitchState = PitchState.UP;
+    public static boolean primed = false;
 
     @Override
     public void init(LinearOpMode opmode) throws InterruptedException {
@@ -76,29 +66,15 @@ public class Intake extends Subsystem {
 
         color = opmode.hardwareMap.get(ColorSensor.class, "color");
         intakeMotor = opmode.hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        slidesMotor = opmode.hardwareMap.get(DcMotorEx.class, "slidesMotor");
         transferServo = opmode.hardwareMap.get(Servo.class, "transferServo");
         leftPitchServo = opmode.hardwareMap.get(Servo.class, "leftPitchServo");
         rightPitchServo = opmode.hardwareMap.get(Servo.class, "rightPitchServo");
 
-        slidesMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        while(slidesMotor.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
-            slidesMotor.setPower(-0.4);
-        }
-
-        slidesMotor.setPower(0);
-
-        Thread.sleep(700);
-
-        slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        slidesMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        setIntakePitch(PitchState.STOWED);
+        setIntakePitch(PitchState.UP);
         setPrimeIntake(false);
         setIntakePower(0);
-        setSlidesTarget(0);
     }
     public Globals.SampleColor getColor() {
         if (color.red() > 120 && color.green() > 120) {
@@ -138,7 +114,7 @@ public class Intake extends Subsystem {
     public void setPrimeIntake(boolean primed) {
         // TODO: Move servo to set up the intake for transfer to outtake
         if (primed) {
-            transferServo.setPosition(0.55);
+            transferServo.setPosition(0.65);
         } else {
             transferServo.setPosition(0.8);
         }
@@ -149,81 +125,63 @@ public class Intake extends Subsystem {
         intakeMotor.setPower(power);
     }
 
-    public void setSlidesTarget (double value) {
-        // TODO: Convert value (1.0 to 0.0) to encoder ticks for slides, and set that to PID target
-        sTarget = (int)(980 * value);
-    }
-
-    public void incrementSlidePos(int inc) {
-        for(int i = 0; i < targets.length; i++) {
-            if(targets[i] >= sTarget) {
-                sTarget = targets[Range.clip((i+inc), 0, targets.length-1)];
-                break;
-            }
-        }
-    }
-
-    public void retractSlides() {
-        sTarget = 10;
-    }
-
-    public void update() {
-        // TODO: Use PID to move slides and obey max speed
-        long t = System.currentTimeMillis();
-
-        if(lastTime == 0) {
-            lastTime = t-1;
-        }
-
-        pos = slidesMotor.getCurrentPosition();
-        double error = sTarget - pos;
-
-        double speed = (double)(error-lastError)/(double)(t-lastTime);
-
-        if(Math.abs(error) < errorThreshold) {
-            errorSum = 0;
-        } else {
-            errorSum += error;
-        }
-
-        Telemetry tel =  FtcDashboard.getInstance().getTelemetry();
-        tel.addData("Horizontal Slides Target", sTarget);
-        tel.addData("Horizontal Slides Pos", pos);
-        tel.update();
-
-        if(Math.abs(manualPower) > 0.05) {
-            power = Range.clip(manualPower + slideF, -1, 1);
-            sTarget = pos;
-        } else {
-            power = Range.clip(error*slideP + errorSum*slideI + +speed*slideD + slideF,
-                    -1, 1);
-        }
-
-        slidesMotor.setPower(power);
-
-        lastTime = t;
-    }
-
-    public boolean areSlidesFinished() {
-        return (Math.abs(pos - slidesTarget) < errorThreshold);
-    }
-
     public boolean getPrimeIntake(){
         return isPrimed;
     }
 
-    public double getSlidesTarget(){
-        return sTarget;
+    public void update() {
+        setIntakePitch(pitchState);
+        setPrimeIntake(primed);
     }
 
-    public void setManualSlidePower(double power) {
-        if(Math.abs(power) < 0.05 || (power < 0 && pos < targets[1])) {
-            this.manualPower = 0;
-            return;
+
+    public void transferIntakeOuttake (States cool) {
+        switch (cool) {
+            case PRIME_INTAKE:
+                pitchState = PitchState.UP;
+                primed = true;
+                robot.intakeSlides.setSlidesTarget(300);
+                break;
+            case PRIME_OUTTAKE:
+                robot.outtake.setExtend(false);
+                robot.outtake.gripperAngle = 0.87;
+                robot.outtake.clawAngle = 180;
+                robot.outtake.armAngle = 140;
+                robot.verticalSlides.retractSlides();
+                break;
+            case POSITION_INTAKE:
+                robot.intakeSlides.setSlidesTarget(150);
+                break;
+            case GRAB_SAMPLE:
+                robot.clawArm.closeCLaw();
+                break;
+            case OUTTAKE_UP:
+                robot.outtake.armAngle = 90;
+                break;
+            case MOVE_OUTTAKE:
+                robot.outtake.clawAngle = 90;
+                robot.outtake.armAngle = 30;
+                break;
         }
-        this.manualPower = power;
     }
 
+    public static int sampleState = 0;
+
+    public void gamepadToTransferIntakeOuttake () {
+        // Pretty jank but it converts a gamepad press into a State
+        sampleState+=1;
+        if(sampleState>6){
+            sampleState = 1;
+        }
+        int count = 0;
+        for (States i : States.values()) {
+            count += 1;
+            if (sampleState == count) {
+                transferIntakeOuttake(i);
+            }
+        }
+    }
+    /*
     public class IntakeSlidesUpdate implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -236,7 +194,7 @@ public class Intake extends Subsystem {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             setIntakePitch(PitchState.DOWN);
-            setSlidesTarget(980);
+            setSlidesTarget(610);
             return !areSlidesFinished();
         }
     }
@@ -249,6 +207,7 @@ public class Intake extends Subsystem {
             return !areSlidesFinished();
         }
     }
+     */
 
 }
 
