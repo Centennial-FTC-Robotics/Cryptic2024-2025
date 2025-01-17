@@ -88,9 +88,12 @@ public class MainTeleOp extends LinearOpMode {
                 // Need to change Axon positioning to 0 to 270
             }
 
-            // SPECIMENS
             if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                robot.outtake.intakeSpecimenPos();
+                robot.outtake.intakeSpecimen();
+            }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+                robot.outtake.outtakeSample();
             }
 
 

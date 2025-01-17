@@ -22,6 +22,8 @@ public class Outtake extends Subsystem {
 
     public ClawArm claw;
 
+    private long startTime;
+
 
     public static int armAngle;
 
@@ -30,6 +32,8 @@ public class Outtake extends Subsystem {
     public static int clawYaw;
 
     public static double gripperAngle = 0.66;
+
+    public String currentActionSequence = "";
 
 
     private LinearOpMode opmode;
@@ -52,6 +56,15 @@ public class Outtake extends Subsystem {
 
     }
 
+    private void initTime(){
+        startTime = System.currentTimeMillis();
+    }
+
+    private boolean hasBeenTime(int mili){
+        return System.currentTimeMillis() - startTime >= mili;
+    }
+
+
 
     public void setExtend(boolean extended) {
         if (extended) {
@@ -66,56 +79,203 @@ public class Outtake extends Subsystem {
         armAngle = 90;
         clawAngle = 180;
         clawYaw = 0;
+        setExtend(false);
 
     }
-    private int specimenState = 0;
-    public void intakeSpecimenPos(){
-        specimenState+=1;
-        if(specimenState>5){
+
+
+
+    public void intakeSpecimenDefaultPosition(){
+        armAngle = 6;
+        clawAngle = 72;
+        clawYaw = 0;
+        setExtend(false);
+        claw.openClaw();
+        robot.verticalSlides.retractSlides();
+
+    }
+    private int specimenSequence = 0;
+
+    public void intakeSpecimen(){
+
+
+        if(specimenSequence==0) {
+            intakeSpecimenDefaultPosition();
+        }
+
+        else if(specimenSequence == 1){
+            currentActionSequence = "Intake Specimen";
+        }
+        else if(specimenSequence == 2){
+            currentActionSequence = "Outtake Specimen";
+        }
+
+        specimenSequence +=1;
+
+        if(specimenSequence>3){
+            specimenSequence = 0;
+            defaultPos();
+            robot.verticalSlides.retractSlides();
             specimenState = 0;
         }
 
-        if(specimenState==0) {
-            armAngle = 6;
-            clawAngle = 72;
-            clawYaw = 0;
-            setExtend(false);
-            claw.openClaw();
-            robot.verticalSlides.retractSlides();
+
+    }
+
+    private int specimenState = 0;
+    private void intakeSpecimenSequence(){
+
+
+        if(specimenState>1){
+            specimenState = 0;
         }
-        else if(specimenState == 1){
-            armAngle = 6;
-            clawAngle = 72;
-            clawYaw = 0;
-            setExtend(false);
+
+        if(specimenState==0 && currentActionSequence.equals("Intake Specimen")) {
+            intakeSpecimenDefaultPosition();
             claw.closeCLaw();
+            specimenState +=1;
+            initTime();
+
         }
-        else if(specimenState == 2){
+        if (specimenState == 1 && hasBeenTime(100)){
             armAngle = 100;
             clawAngle = 150;
             clawYaw = 0;
             setExtend(true);
             claw.closeCLaw();
-        }
-        else if(specimenState == 3){
-            setExtend(true);
-            claw.closeCLaw();
-            robot.verticalSlides.slidesTarget = 850;
-            clawAngle = 90;
-            armAngle = 121;
-        }
-        else if(specimenState == 4){
-            robot.verticalSlides.slidesTarget = 990;
+            robot.verticalSlides.slidesTarget = 800;
 
-        }else if(specimenState == 5){
+            specimenState += 1;
+            initTime();
+
+            currentActionSequence = "";
+
+        }
+
+
+    }
+
+    private void outtakeSpecimenSequence(){
+
+
+
+        if(specimenState==2 && currentActionSequence.equals("Outtake Specimen")) {
+            robot.verticalSlides.slidesTarget += 775;
+            armAngle+=15;
+            clawAngle-=10;
+            specimenState +=1;
+            initTime();
+
+        }
+        if(specimenState == 3 && hasBeenTime(900)){
             claw.openClaw();
+            specimenState+=1;
+            initTime();
+        }
+        if (specimenState == 4 && hasBeenTime(250)){
+
+            initTime();
+            robot.verticalSlides.retractSlides();
+
+            specimenState = 0;
+            currentActionSequence = "";
+
+            intakeSpecimen();
+
         }
 
+    }
+
+
+    int outtakeSampleState = 0;
+    public void outtakeSample(){
+
+        if(outtakeSampleState == 0){
+            armAngle = 30;
+            clawAngle = 72;
+            clawYaw = 0;
+            setExtend(false);
+            claw.closeCLaw();
+
+
+        }
+
+        else if(outtakeSampleState == 1){
+            currentActionSequence = "Outtake Sample";
+        }
+
+        else if(outtakeSampleState >= 2){
+            currentActionSequence = "";
+            outtakeSampleState = 0;
+            outtakeSampleSequenceState = 0;
+
+
+
+        }
+
+
+        outtakeSampleState +=1;
+
+
+    }
+
+    int outtakeSampleSequenceState = 0;
+
+    private void outtakeSampleSequence(){
+
+        if(outtakeSampleSequenceState ==0 && currentActionSequence.equals( "Outtake Sample")){
+            armAngle = 15;
+            clawAngle = 72;
+            clawYaw = 0;
+            setExtend(false);
+            claw.closeCLaw();
+
+            outtakeSampleSequenceState +=1;
+            initTime();
+        }
+
+        if(outtakeSampleSequenceState == 1 && hasBeenTime(150)){
+            claw.openClaw();
+
+            outtakeSampleSequenceState +=1;
+            initTime();
+        }
+
+        if(outtakeSampleSequenceState == 2 && hasBeenTime(150)){
+            armAngle = 30;
+
+            outtakeSampleSequenceState +=1;
+            initTime();
+        }
+
+        if(outtakeSampleSequenceState == 3 && hasBeenTime(200)){
+            defaultPos();
+
+
+            robot.verticalSlides.retractSlides();
+            outtakeSampleSequenceState = 0;
+            outtakeSampleState = 0;
+            currentActionSequence = "";
+            initTime();
+        }
 
 
     }
 
     public void update() {
+
+        if(currentActionSequence.equals("Intake Specimen")){
+            intakeSpecimenSequence();
+        }
+
+        if(currentActionSequence.equals("Outtake Specimen")){
+            outtakeSpecimenSequence();
+        }
+
+        if(currentActionSequence.equals("Outtake Sample")){
+            outtakeSampleSequence();
+        }
+
 
         claw.setGripperPos(gripperAngle);
 
