@@ -1,12 +1,16 @@
 package org.Cryptic.Subsystems;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Subsystem;
-public class ClawArm{
+public class ClawArm extends Subsystem{
 
     public Servo clawServo;
 
@@ -15,8 +19,8 @@ public class ClawArm{
     public Servo leftArmServo;
     public Servo rightArmServo;
 
-    public final double clawCloseValue = .13;
-    public final double clawOpenValue = 0;
+    public final double clawCloseValue = 1;
+    public final double clawOpenValue = 0.66;
 
     private boolean clawOpened;
 
@@ -31,7 +35,14 @@ public class ClawArm{
         leftClawServo = opmode.hardwareMap.get(Servo.class, "rightClawServo");
         leftArmServo = opmode.hardwareMap.get(Servo.class, "leftArmServo");
         rightArmServo = opmode.hardwareMap.get(Servo.class, "rightArmServo");
-        rightClawServo.setDirection(Servo.Direction.REVERSE);
+
+
+        clawServo.setPosition(.65);
+
+        setClawPos(90,0);
+        openClaw();
+        setArmAngle(110);
+
 
     }
 
@@ -82,6 +93,11 @@ public class ClawArm{
         leftArmServo.setPosition(armValue);
     }
 
-
-
+    public class OpenClaw implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket telemetryPacket) {
+            openClaw();
+            return true;
+        }
+    }
 }

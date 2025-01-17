@@ -2,6 +2,8 @@ package org.Cryptic.Subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,12 +15,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Subsystem;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+@Config
 public class VerticalSlides extends Subsystem {
 
-    public static double slideP = 0.005;
+    public static double slideP = 0.0003;
     public static double slideI = 0.0001;
-    public static double slideD = 0;
+    public static double slideD = 0.1;
     public static double slideF = 0.1;
     public static int errorThreshold = 5;
     public final int intakeArmThreshold = 900;
@@ -30,7 +35,7 @@ public class VerticalSlides extends Subsystem {
 
     public static double maxDownSpeed = 0.35;
 
-    public int slidesTarget = 175;
+    public int slidesTarget = 10;
 
     public int errorSum = 0;
     public int lastError = 0;
@@ -47,7 +52,7 @@ public class VerticalSlides extends Subsystem {
 
     public static int off = 0;
 
-    public int[] targets = {175, 500-off, 1100-off, 1500-off, 2155-off};
+    public int[] targets = {10, 175, 500-off, 1100-off, 1500-off, 2155-off};
     public double manualPower = 0;
 
     public int pos = -1;
@@ -64,6 +69,12 @@ public class VerticalSlides extends Subsystem {
 
         slideMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+
+        while(slideMotorR.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
+            slideMotorL.setPower(-0.4);
+            slideMotorR.setPower(-0.4);
+        }
 
         slideMotorR.setPower(0);
         slideMotorL.setPower(0);
@@ -88,7 +99,7 @@ public class VerticalSlides extends Subsystem {
     }
 
     public void retractSlides() {
-        slidesTarget = 175;
+        slidesTarget = 10;
     }
 
     public void setWheel(double power) {
@@ -114,8 +125,13 @@ public class VerticalSlides extends Subsystem {
 
 
 
-        pos = -slideMotorR.getCurrentPosition();
+        pos = slideMotorR.getCurrentPosition();
         double error = slidesTarget - pos;
+
+        Telemetry tel =  FtcDashboard.getInstance().getTelemetry();
+        tel.addData("Vertical Slides Target", slidesTarget);
+        tel.addData("Vertical Slides Pos", pos);
+        tel.update();
 
         canOuttake= pos >= intakeArmThreshold;
 
@@ -147,13 +163,6 @@ public class VerticalSlides extends Subsystem {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             update();
             return true;
-        }
-    }
-
-    public class MoveVerticalSlidesToTarget implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
         }
     }
 }

@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -24,19 +25,14 @@ import kotlin.OverloadResolutionByLambdaReturnType;
 
 @Config
 public class Intake extends Subsystem {
-    public static double P = 0;
-    public static double I = 0;
-    public static double D = 0;
-    public static int targetErrorThreshold = 0;
-    public static double velErrorThreshold = 0;
 
     public static double slidesTarget;
 
     public static double maxSlideSpeed;
 
-    public static double pitchDown = 0.0;
-    public static double pitchUp = 0.0;
-    public static double pitchStowed = 0.0;
+    public static double pitchDown = 0.5;
+    public static double pitchUp = 0.7;
+    public static double pitchStowed = 0.7;
 
     private boolean isPrimed;
     private double sTarget;
@@ -60,8 +56,8 @@ public class Intake extends Subsystem {
     public int lastError = 0;
     public long lastTime = 0;
 
-    public static double slideP = 0.005;
-    public static double slideI = 0.0001;
+    public static double slideP = 0.00025;
+    public static double slideI = 0.00005;
     public static double slideD = 0;
     public static double slideF = 0.1;
     public static int errorThreshold = 5;
@@ -84,6 +80,8 @@ public class Intake extends Subsystem {
         transferServo = opmode.hardwareMap.get(Servo.class, "transferServo");
         leftPitchServo = opmode.hardwareMap.get(Servo.class, "leftPitchServo");
         rightPitchServo = opmode.hardwareMap.get(Servo.class, "rightPitchServo");
+
+        slidesMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         while(slidesMotor.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
             slidesMotor.setPower(-0.4);
@@ -125,15 +123,15 @@ public class Intake extends Subsystem {
         switch (cool) {
             case DOWN:
                 leftPitchServo.setPosition(pitchDown);
-                rightPitchServo.setPosition(pitchDown);
+                rightPitchServo.setPosition(1-pitchDown);
                 break;
             case UP:
                 leftPitchServo.setPosition(pitchUp);
-                rightPitchServo.setPosition(pitchUp);
+                rightPitchServo.setPosition(1-pitchUp);
                 break;
             case STOWED:
                 leftPitchServo.setPosition(pitchStowed);
-                rightPitchServo.setPosition(pitchStowed);
+                rightPitchServo.setPosition(1-pitchStowed);
         }
     }
 
@@ -156,8 +154,13 @@ public class Intake extends Subsystem {
         sTarget = (int)(980 * value);
     }
 
-    public void incrementSlidesTarget(double value) {
-        sTarget += value;
+    public void incrementSlidePos(int inc) {
+        for(int i = 0; i < targets.length; i++) {
+            if(targets[i] >= sTarget) {
+                sTarget = targets[Range.clip((i+inc), 0, targets.length-1)];
+                break;
+            }
+        }
     }
 
     public void retractSlides() {
@@ -172,8 +175,7 @@ public class Intake extends Subsystem {
             lastTime = t-1;
         }
 
-
-        pos = -slidesMotor.getCurrentPosition();
+        pos = slidesMotor.getCurrentPosition();
         double error = sTarget - pos;
 
         double speed = (double)(error-lastError)/(double)(t-lastTime);
@@ -185,8 +187,8 @@ public class Intake extends Subsystem {
         }
 
         Telemetry tel =  FtcDashboard.getInstance().getTelemetry();
-        tel.addData("target", sTarget);
-        tel.addData("pos", pos);
+        tel.addData("Horizontal Slides Target", sTarget);
+        tel.addData("Horizontal Slides Pos", pos);
         tel.update();
 
         if(Math.abs(manualPower) > 0.05) {

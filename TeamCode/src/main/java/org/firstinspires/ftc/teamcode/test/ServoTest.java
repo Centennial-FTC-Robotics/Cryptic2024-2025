@@ -14,13 +14,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @TeleOp
 public class ServoTest extends LinearOpMode {
 
-    public static String hardwareName = "transferServo";
     public static double servoPos = 0.0;
+    public static double servo2Pos = 0.0;
     public Servo servo;
+    public Servo servo2;
 
     @Override
     public void runOpMode() {
-        servo = hardwareMap.get(Servo.class, hardwareName);
+        servo = hardwareMap.get(Servo.class, "leftPitchServo");
+        servo2 = hardwareMap.get(Servo.class, "rightPitchServo");
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         waitForStart();
@@ -31,6 +33,7 @@ public class ServoTest extends LinearOpMode {
             packet.put("status", "alive");
 
             servo.setPosition(servoPos);
+            servo2.setPosition(servo2Pos);
 
             dashboard.sendTelemetryPacket(packet);
 

@@ -100,7 +100,7 @@ public class MainTeleOp extends LinearOpMode {
 
             // Increment Horizontal Slides
             if (intakePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.intake.incrementSlidesTarget(0.1);
+                robot.intake.incrementSlidePos(1);
             }
 
             // Retract Horizontal Slides
@@ -114,8 +114,14 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             // Move Intake Up
-            if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if (intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)>0) {
                 robot.intake.setIntakePitch(Intake.PitchState.UP);
+            }else{
+                robot.intake.setIntakePitch(Intake.PitchState.DOWN);
+            }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
+                robot.outtake.intakeSpecimenPos();
             }
 
             // Set Up Intake for Transfer

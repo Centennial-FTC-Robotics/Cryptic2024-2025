@@ -1,5 +1,6 @@
 package org.Cryptic;
 
+import org.Cryptic.Subsystems.ClawArm;
 import org.Cryptic.Subsystems.Drivetrain;
 import org.Cryptic.Subsystems.IMU;
 import org.Cryptic.Subsystems.Outtake;
@@ -11,13 +12,15 @@ public class Robot {
     public Drivetrain dt = new Drivetrain();
     public VerticalSlides verticalSlides = new VerticalSlides();
     public Intake intake = new Intake();
-    public Outtake outtake = new Outtake();
+    public ClawArm clawArm = new ClawArm();
+    public Outtake outtake = new Outtake(clawArm);
     public IMU imu = new IMU();
 
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
             verticalSlides,
             intake,
+            clawArm,
             outtake
             //imu
     };

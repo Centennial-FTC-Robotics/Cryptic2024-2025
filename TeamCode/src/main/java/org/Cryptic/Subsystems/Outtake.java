@@ -15,8 +15,8 @@ import org.Cryptic.Subsystem;
 public class Outtake extends Subsystem {
     public Servo extendServo;
 
-    public final double maxExtend = .95;
-    public final double minExtend = .22;
+    public final double maxExtend = .22;
+    public final double minExtend = .95;
 
     public boolean extendValue;
 
@@ -31,17 +31,24 @@ public class Outtake extends Subsystem {
 
     private LinearOpMode opmode;
 
+    public Outtake(ClawArm a){
+        this.claw = a;
+    }
+
 
     public void init(LinearOpMode opmode) throws InterruptedException {
         this.opmode = opmode;
 
-        claw = new ClawArm();
-
-        claw.init(opmode);
-
         extendServo = opmode.hardwareMap.get(Servo.class, "extendServo");
 
         defaultPos();
+        claw.openClaw();
+
+        setExtend(false);
+
+
+
+
 
     }
 
@@ -55,36 +62,65 @@ public class Outtake extends Subsystem {
     }
 
     public void defaultPos(){
-        claw.openClaw();
+
         armAngle = 90;
         clawAngle = 90;
-        clawYaw = -1;
+        clawYaw = 0;
+
+    }
+    private int specimenState = 0;
+    public void intakeSpecimenPos(){
+        specimenState+=1;
+        if(specimenState>5){
+            specimenState = 0;
+        }
+
+        if(specimenState==0) {
+            armAngle = 6;
+            clawAngle = 72;
+            clawYaw = 0;
+            setExtend(false);
+            claw.openClaw();
+            robot.verticalSlides.retractSlides();
+        }
+        else if(specimenState == 1){
+            armAngle = 6;
+            clawAngle = 72;
+            clawYaw = 0;
+            setExtend(false);
+            claw.closeCLaw();
+        }
+        else if(specimenState == 2){
+            armAngle = 100;
+            clawAngle = 150;
+            clawYaw = 0;
+            setExtend(true);
+            claw.closeCLaw();
+        }
+        else if(specimenState == 3){
+            setExtend(true);
+            claw.closeCLaw();
+            robot.verticalSlides.slidesTarget = 850;
+            clawAngle = 90;
+            armAngle = 121;
+        }
+        else if(specimenState == 4){
+            robot.verticalSlides.slidesTarget = 990;
+
+        }else if(specimenState == 5){
+            claw.openClaw();
+        }
+
+
 
     }
 
-
-
     public void update() {
-        claw.openClaw();
+
 
         claw.setArmAngle(armAngle);
 
         claw.setClawPos(clawAngle,clawYaw);
 
-
     }
-
-    public class OpenClaw implements Action {
-        boolean initialized = false;
-        @Override
-        public boolean run (@NonNull TelemetryPacket telemetryPacket) {
-            if (!initialized) {
-                clawGrab(false);
-            }
-            return false;
-        }
-    }
-
-
-
 }
