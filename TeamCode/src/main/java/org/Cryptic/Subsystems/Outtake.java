@@ -15,7 +15,7 @@ import org.Cryptic.Subsystem;
 public class Outtake extends Subsystem {
     public Servo extendServo;
 
-    public static final double maxExtend = .22;
+    public static final double maxExtend = .26;
     public static final double minExtend = .95;
 
     public boolean extendValue;
@@ -74,6 +74,10 @@ public class Outtake extends Subsystem {
         }
     }
 
+    public void fullExtend(){
+        extendServo.setPosition(maxExtend-.05);
+    }
+
     public void defaultPos(){
 
         armAngle = 90;
@@ -86,10 +90,10 @@ public class Outtake extends Subsystem {
 
 
     public void intakeSpecimenDefaultPosition(){
-        armAngle = 6;
-        clawAngle = 72;
+        armAngle = 140;
+        clawAngle = 90;
         clawYaw = 0;
-        setExtend(false);
+        setExtend(true);
         claw.openClaw();
         robot.verticalSlides.retractSlides();
 
@@ -133,17 +137,18 @@ public class Outtake extends Subsystem {
         if(specimenState==0 && currentActionSequence.equals("Intake Specimen")) {
             intakeSpecimenDefaultPosition();
             claw.closeCLaw();
+            fullExtend();
             specimenState +=1;
             initTime();
 
         }
         if (specimenState == 1 && hasBeenTime(100)){
-            armAngle = 100;
-            clawAngle = 150;
+            armAngle = 10;
+            clawAngle = 155;
             clawYaw = 0;
-            setExtend(true);
+            setExtend(false);
             claw.closeCLaw();
-            robot.verticalSlides.slidesTarget = 800;
+            robot.verticalSlides.slidesTarget = 400;
 
             specimenState += 1;
             initTime();
@@ -160,14 +165,14 @@ public class Outtake extends Subsystem {
 
 
         if(specimenState==2 && currentActionSequence.equals("Outtake Specimen")) {
-            robot.verticalSlides.slidesTarget += 775;
+            robot.verticalSlides.slidesTarget += 105;
             armAngle+=15;
             clawAngle-=10;
             specimenState +=1;
             initTime();
 
         }
-        if(specimenState == 3 && hasBeenTime(900)){
+        if(specimenState == 3 && hasBeenTime(1100)){
             claw.openClaw();
             specimenState+=1;
             initTime();
