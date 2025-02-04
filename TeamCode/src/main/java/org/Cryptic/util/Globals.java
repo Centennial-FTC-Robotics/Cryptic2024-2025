@@ -10,4 +10,5 @@ public class Globals {
         RED, YELLOW, BLUE, UNKNOWN
     }
 
+
 }

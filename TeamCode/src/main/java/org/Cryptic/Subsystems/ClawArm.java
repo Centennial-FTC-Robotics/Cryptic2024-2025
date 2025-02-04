@@ -25,7 +25,7 @@ public class ClawArm extends Subsystem{
     public static double gripperPos = 0.0;
 
     private boolean clawOpened;
-    public final double clawCloseValue = .82;
+    public final double clawCloseValue = .8;
     public final double clawOpenValue = 0.6;
 
     private LinearOpMode opmode;
@@ -66,7 +66,7 @@ public class ClawArm extends Subsystem{
         return clawOpened;
     }
     public void setClawPos(int pitch,int spinCounter){
-        pitch = Range.clip(pitch,0,180);
+        pitch = Range.clip(pitch,0,130);
         double pitchVal = Range.scale(pitch,0.0,180.0,0.0,1.0);
         double spinVal = 0;
         if(spinCounter ==0){

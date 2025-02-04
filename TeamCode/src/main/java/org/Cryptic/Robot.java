@@ -1,7 +1,9 @@
 package org.Cryptic;
 
+import org.Cryptic.Commands.SpecimenCommands;
 import org.Cryptic.Subsystems.ClawArm;
 import org.Cryptic.Subsystems.Drivetrain;
+import org.Cryptic.Subsystems.DrivetrainNoRR;
 import org.Cryptic.Subsystems.IMU;
 import org.Cryptic.Subsystems.IntakeSlides;
 import org.Cryptic.Subsystems.Outtake;
@@ -17,6 +19,8 @@ public class Robot {
     public ClawArm clawArm = new ClawArm();
     public Outtake outtake = new Outtake(clawArm);
     public IMU imu = new IMU();
+    public DrivetrainNoRR dtNoRR = new DrivetrainNoRR();
+    public SpecimenCommands specimenCommands = new SpecimenCommands();
 
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
@@ -25,8 +29,9 @@ public class Robot {
             clawArm,
             outtake,
             intake,
-            intakeSlides
-            //imu
+            intakeSlides,
+            imu,
+            specimenCommands
     };
 
     public void initialize(LinearOpMode opmode) throws InterruptedException {

@@ -18,13 +18,12 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystems.Intake;
-import org.Cryptic.Subsystems.Outtake;
-import org.Cryptic.util.Globals;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 @TeleOp (name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
+
+    public static double ledColor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -42,6 +41,10 @@ public class MainTeleOp extends LinearOpMode {
                 intakePad, GamepadKeys.Button.B
         );
 
+        double slowMode = 0.0;
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+
         waitForStart();
         while (opModeIsActive()) {
             TelemetryPacket packet = new TelemetryPacket();
@@ -57,15 +60,24 @@ public class MainTeleOp extends LinearOpMode {
             robot.verticalSlides.update();
             // robot.outtake.update?
 
+            robot.intake.LEDs.setPosition(ledColor);
+
+            if (gamepad1.right_trigger >= 0.05) {
+                slowMode = Range.clip((1.0 - gamepad1.right_trigger),0, 1);
+            } else {
+                slowMode = 1.0;
+            }
+
             robot.dt.drivebase.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x
+                            -gamepad1.left_stick_y * slowMode,
+                            -gamepad1.left_stick_x * slowMode
                     ),
-                    -gamepad1.right_stick_x
+                    -gamepad1.right_stick_x * slowMode
             ));
 
             packet.put("Color: ", robot.intake.getColor());
+            packet.put("SPECIMEN STATE: ", robot.specimenCommands.getSpecimenState());
 
             // Extend Slides
             if (drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -89,7 +101,7 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                robot.outtake.intakeSpecimen();
+                robot.specimenCommands.specimenUpdate();
             }
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
@@ -118,22 +130,20 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             // Move Intake Up
-            if (intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.05) {
-                robot.intake.setIntakePitch(Intake.PitchState.DOWN);
-            } else {
-                robot.intake.setIntakePitch(Intake.PitchState.UP);
-            }
+
 
             // Set Up Intake for Transfer
             //robot.intake.setPrimeIntake(bIntakeReader.getState());
 
             // Move Intake Rollers
-            robot.intake.setIntakePower(intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+            robot.intake.setIntakePower(intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.4));
 
             // Samples Automation
             if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
                 robot.intake.gamepadToTransferIntakeOuttake();
             }
+
+            dashboard.sendTelemetryPacket(packet);
 
         }
     }

@@ -74,7 +74,7 @@ public class IntakeSlides extends Subsystem {
     }
 
     public void retractSlides() {
-        sTarget = 10;
+        sTarget = 9;
     }
 
 
