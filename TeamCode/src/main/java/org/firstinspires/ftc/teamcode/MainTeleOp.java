@@ -100,8 +100,12 @@ public class MainTeleOp extends LinearOpMode {
                 // Need to change Axon positioning to 0 to 270
             }
 
-            if (drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            if (intakePad.wasJustPressed(GamepadKeys.Button.Y)) {
                 robot.specimenCommands.specimenUpdate();
+            }
+
+            if(intakePad.wasJustPressed(GamepadKeys.Button.B)){
+                robot.outtake.intakeClawSample();
             }
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
@@ -137,10 +141,20 @@ public class MainTeleOp extends LinearOpMode {
 
             // Move Intake Rollers
             robot.intake.setIntakePower(intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.4));
-
-            // Samples Automation
+            if(intakePad.wasJustPressed(GamepadKeys.Button.A)){
+                if(robot.outtake.intakeClawSampleState ==2){
+                    robot.outtake.currentActionSequence=  "Intake Claw Sample";
+                    robot.outtake.intakeClawSampleSequenceState = 0;
+                }
+            }
+            // Spin Claw
             if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                robot.intake.gamepadToTransferIntakeOuttake();
+                //robot.intake.gamepadToTransferIntakeOuttake();
+                robot.outtake.clawSpinLeft();
+            }
+            if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                //robot.intake.gamepadToTransferIntakeOuttake();
+                robot.outtake.clawSpinRight();
             }
 
             dashboard.sendTelemetryPacket(packet);

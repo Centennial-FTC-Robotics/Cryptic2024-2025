@@ -20,52 +20,57 @@ public class MeepMeepTesting {
         double t = 23.5;
 
         // (NEW) 3 Specimen Auto
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(t*-0.5, t*2.5, Math.toRadians(270)))
-                .splineToConstantHeading(new Vector2d(-9.73, 35.77), Math.toRadians(270))
-                .setTangent(Math.toRadians(180))
-                // Move to side
-                .splineToConstantHeading(new Vector2d(-35, 36.16), Math.toRadians(270))
-                // Move down
-                .splineToConstantHeading(new Vector2d(-35, 12), Math.toRadians(270))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-41, 12), Math.toRadians(90))
-                // Move up
-                .splineToConstantHeading(new Vector2d(-41, 50), Math.toRadians(90))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-45, 50), Math.toRadians(270))
-                // Move down
-                .splineToConstantHeading(new Vector2d(-45, 12), Math.toRadians(270))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-51, 12), Math.toRadians(90))
-                // Move up
-                .splineToConstantHeading(new Vector2d(-50, 50), Math.toRadians(90))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-55, 50), Math.toRadians(270))
-                // Move down
-                .splineToConstantHeading(new Vector2d(-53, 12), Math.toRadians(270))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-60, 12), Math.toRadians(90))
-                // Move up
-                .splineToConstantHeading(new Vector2d(-60, 50), Math.toRadians(90))
-                // Move back
-                .splineToConstantHeading(new Vector2d(-55, 47), Math.toRadians(270))
-                // Prepare for specimens
-                .splineTo(new Vector2d(-38, 42.5), Math.toRadians(90))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*-0.5-2.75), (t*2.5 + 2.75), Math.toRadians(270)))
                 .waitSeconds(1)
+                .splineToConstantHeading(new Vector2d(-4, 33), Math.toRadians(270))
+                .setTangent(Math.toRadians(135))
+                // Move to side
+                .splineToConstantHeading(new Vector2d(-37, 36.16), Math.toRadians(270))
+                // Move up
+                .splineToConstantHeading(new Vector2d(-38, 18), Math.toRadians(270))
+                // Move right
+                .splineToConstantHeading(new Vector2d(-45, 12), Math.toRadians(90))
+                // Push
+                .splineToConstantHeading(new Vector2d(-45, 50), Math.toRadians(90))
+                .setTangent(Math.toRadians(270))
+                // Move Up
+                .splineToConstantHeading(new Vector2d(-45, 18), Math.toRadians(270))
+                // Move right
+                .splineToConstantHeading(new Vector2d(-55, 12), Math.toRadians(90))
+                // Push
+                .splineToConstantHeading(new Vector2d(-55, 50), Math.toRadians(90))
+                .setTangent(Math.toRadians(270))
+                // Move Up
+                .splineToConstantHeading(new Vector2d(-55, 18), Math.toRadians(270))
+                // Move right
+                .splineToConstantHeading(new Vector2d(-58, 12), Math.toRadians(90))
+                // Push
+                .splineToConstantHeading(new Vector2d(-58, 50), Math.toRadians(90))
+                .setTangent(Math.toRadians(270))
+                // Move back
+                //.splineToConstantHeading(new Vector2d(-55, 47), Math.toRadians(270))
+                // Prepare for specimens
+                .splineToConstantHeading(new Vector2d(-38, 42.5), Math.toRadians(90))
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(90))
+
                 // Head into Observation Zone
                 .splineTo(new Vector2d(-38, 58), Math.toRadians(90))
 
                 // Pick up Specimen
                 .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
+                .setTangent(Math.toRadians(0))
                 // Go to rung
-                .splineToConstantHeading(new Vector2d(-9.73, 35.77), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(10, 50), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(10, 33), Math.toRadians(270))
+
                 // Hang specimen
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(90))
                 // Go Back to Observation Zone
-                .splineToConstantHeading(new Vector2d(-38, 58), Math.toRadians(90))
-
+                .splineToConstantHeading(new Vector2d(0, 45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-38, 58), Math.toRadians(180))
+                /*
                 // Pick up Specimen
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(270))
@@ -87,6 +92,7 @@ public class MeepMeepTesting {
                 .setTangent(Math.toRadians(90))
                 // Go Back to Observation Zone
                 .splineTo(new Vector2d(-38, 58), Math.toRadians(90))
+                 */
                 .build());
 
 

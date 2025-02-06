@@ -25,7 +25,7 @@ public class ClawArm extends Subsystem{
     public static double gripperPos = 0.0;
 
     private boolean clawOpened;
-    public final double clawCloseValue = .8;
+    public final double clawCloseValue = .85;
     public final double clawOpenValue = 0.6;
 
     private LinearOpMode opmode;
@@ -76,13 +76,13 @@ public class ClawArm extends Subsystem{
             spinVal = -.25;
         }
         else if(spinCounter == -2){
-            spinVal = -.5;
+            spinVal = -.4;
         }
         else if(spinCounter ==1){
             spinVal = .25;
         }
         else if(spinCounter == 2){
-            spinVal = .5;
+            spinVal = .4;
         }
         leftClawServo.setPosition(Range.clip((1-pitchVal)+spinVal,0,1));
         rightClawServo.setPosition(Range.clip(((pitchVal)) + spinVal,0,1));

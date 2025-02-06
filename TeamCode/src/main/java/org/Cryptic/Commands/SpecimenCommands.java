@@ -22,9 +22,9 @@ public class SpecimenCommands extends Subsystem {
     public enum specimenStates {
         DEFAULT,
         EXTEND,
-        POSITION_CLAW,
+        CLOSE_CLAW,
         POSITION_TO_SCORE,
-        OPEN_CLAW,
+        RELEASE_SPECIMEN,
         RESET
     }
 
@@ -60,46 +60,45 @@ public class SpecimenCommands extends Subsystem {
         switch (specimenState) {
             case DEFAULT:
                 initTime();
-                robot.outtake.extendServo.setPosition(0.6);
+                robot.outtake.fullRetract();
                 specimenState = specimenStates.EXTEND;
                 break;
             case EXTEND:
                 if (hasBeenTime(100)) {
                     robot.outtake.intakeSpecimenDefaultPosition();
-                    specimenState = specimenStates.POSITION_CLAW;
-                }
-                break;
-            case POSITION_CLAW:
-                if (hasBeenTime(200)) {
-                    robot.outtake.armAngle = 9;
-                    robot.outtake.clawAngle = 65;
-                    robot.outtake.clawYaw = 0;
-                    robot.outtake.setExtend(false);
-                    robot.outtake.claw.closeCLaw();
-                    robot.verticalSlides.slidesTarget = 403;
-
-                    specimenState = specimenStates.POSITION_TO_SCORE;
-                }
-                break;
-            case POSITION_TO_SCORE:
-                robot.verticalSlides.slidesTarget += 105;
-                robot.outtake.armAngle += 15;
-                robot.outtake.clawAngle -= 11;
-                specimenState = specimenStates.OPEN_CLAW;
-                initTime();
-                break;
-            case OPEN_CLAW:
-                if (hasBeenTime(1100)) {
-                    robot.outtake.claw.openClaw();
-                    specimenState = specimenStates.RESET;
+                    specimenState = specimenStates.CLOSE_CLAW;
                     initTime();
                 }
+                break;
+            case CLOSE_CLAW:
+                robot.outtake.claw.closeCLaw();
+                initTime();
+                specimenState = specimenStates.POSITION_TO_SCORE;
+                break;
+            case POSITION_TO_SCORE:
+                //if(hasBeenTime(400)) {
+                robot.outtake.armAngle = 121;
+                robot.outtake.clawAngle = 75;
+                robot.outtake.clawYaw = 0;
+                robot.outtake.fullExtend();
+                robot.outtake.claw.closeCLaw();
+                robot.verticalSlides.slidesTarget = 1340;
+
+                specimenState = specimenStates.RELEASE_SPECIMEN;
+                //}
+                break;
+            case RELEASE_SPECIMEN:
+                specimenState = specimenStates.RESET;
+                robot.outtake.claw.openClaw();
+
+                robot.outtake.fullRetract();
+
+                initTime();
                 break;
             case RESET:
                 if (hasBeenTime(250)) {
                     initTime();
                     robot.verticalSlides.retractSlides();
-
                     specimenState = specimenStates.DEFAULT;
                 }
                 break;

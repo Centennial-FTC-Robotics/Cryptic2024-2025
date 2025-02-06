@@ -162,7 +162,7 @@ public class Intake extends Subsystem {
 
                 break;
             case PRIME_OUTTAKE:
-                robot.outtake.setExtend(false);
+                robot.outtake.fullRetract();
                 primed = true;
                 robot.outtake.gripperAngle = 0.87;
                 robot.outtake.clawAngle = 84;

@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Subsystem;
 
@@ -16,8 +17,8 @@ import org.Cryptic.Subsystem;
 public class Outtake extends Subsystem {
     public Servo extendServo;
 
-    public static final double maxExtend = .26;
-    public static final double minExtend = .95;
+    public static final double maxExtend = .25;
+    public static final double minExtend = .96;
 
     public boolean extendValue;
 
@@ -48,10 +49,12 @@ public class Outtake extends Subsystem {
 
         extendServo = opmode.hardwareMap.get(Servo.class, "extendServo");
 
+        robot.clawArm.clawServo.setPosition(robot.clawArm.clawCloseValue);
+
         defaultPos();
-        update();
-        setExtend(false);
         claw.closeCLaw();
+        update();
+        fullRetract();
         sleep(700);
 
     }
@@ -66,16 +69,17 @@ public class Outtake extends Subsystem {
 
 
 
-    public void setExtend(boolean extended) {
-        if (extended) {
-            extendServo.setPosition(maxExtend);
-        } else {
-            extendServo.setPosition(minExtend);
-        }
+    public void setExtend(int extend) {
+        double val = Range.scale(extend,0.0,100.0,maxExtend,minExtend);
+        extendServo.setPosition(Range.clip(val, minExtend,maxExtend));
     }
 
     public void fullExtend(){
-        extendServo.setPosition(maxExtend-.05);
+        setExtend(100);
+    }
+
+    public void fullRetract(){
+        setExtend(0);
     }
 
     public void defaultPos(){
@@ -83,20 +87,20 @@ public class Outtake extends Subsystem {
         armAngle = 90;
         clawAngle = 120;
         clawYaw = 0;
-        setExtend(false);
+        fullRetract();
 
     }
 
 
 
     public void intakeSpecimenDefaultPosition() {
-        armAngle = 140;
+        armAngle = 3;
         clawAngle = 0;
 
 
         clawYaw = 0;
         claw.openClaw();
-        //setExtend(true);
+        //fullExtend();
         robot.verticalSlides.retractSlides();
 
     }
@@ -108,7 +112,7 @@ public class Outtake extends Subsystem {
             armAngle = 50; //30
             clawAngle = 0;
             clawYaw = 0;
-            setExtend(false);
+            fullRetract();
             claw.closeCLaw();
 
 
@@ -133,6 +137,93 @@ public class Outtake extends Subsystem {
 
     }
 
+    public int intakeClawSampleState = 0;
+
+    public void clawSpinRight(){
+        clawYaw-=1;
+
+        if(clawYaw<-2){
+            clawYaw = -2;
+        }
+
+    }
+    public void clawSpinLeft(){
+        // @Daud had to switch clawSpinLeft and clawSpinRight
+
+        clawYaw+=1;
+
+        if(clawYaw >2){
+            clawYaw =2;
+        }
+    }
+
+    public void intakeClawSample(){
+
+        if(intakeClawSampleState>4){
+            intakeClawSampleState = 0;
+        }
+
+        if(intakeClawSampleState==0){
+
+            clawAngle = 90;
+            fullExtend();
+            robot.clawArm.closeCLaw();
+            robot.verticalSlides.retractSlides();
+        }
+        if(intakeClawSampleState ==1){
+            armAngle = 151;
+            robot.clawArm.openClaw();
+            initTime();
+        }
+        if(intakeClawSampleState==2){
+            clawAngle = 20;
+        }
+
+        else if(intakeClawSampleState == 3){
+            defaultPos();
+            fullRetract();
+        }else if(intakeClawSampleState ==4){
+            intakeClawSampleState = -1;
+            intakeClawSampleSequenceState = 0;
+            currentActionSequence = "";
+        }
+
+
+        intakeClawSampleState+=1;
+    }
+
+    public int intakeClawSampleSequenceState = 0;
+
+    public void intakeClawSequence(){
+
+
+
+        if(intakeClawSampleSequenceState ==0 && currentActionSequence.equals("Intake Claw Sample") ){
+            robot.clawArm.openClaw();
+            armAngle  +=8;
+            clawAngle -=17;
+            intakeClawSampleSequenceState +=1;
+            initTime();
+        }
+        else if(intakeClawSampleSequenceState ==1 && hasBeenTime(175)){
+            robot.clawArm.closeCLaw();
+            intakeClawSampleSequenceState +=1;
+            initTime();
+        }
+
+        else if(intakeClawSampleSequenceState ==2 && hasBeenTime(200)){
+            armAngle-=8;
+            clawAngle+=15;
+            clawYaw = 0;
+            intakeClawSampleSequenceState+=1;
+        }
+        else if(intakeClawSampleSequenceState == 3){
+            intakeClawSampleSequenceState =0;
+            currentActionSequence = "";
+        }
+    }
+
+
     int outtakeSampleSequenceState = 0;
 
     private void outtakeSampleSequence(){
@@ -143,7 +234,7 @@ public class Outtake extends Subsystem {
             armAngle = 40; //15
             clawAngle = 0;
             clawYaw = 0;
-            setExtend(false);
+            fullRetract();
             claw.closeCLaw();
 
             outtakeSampleSequenceState +=1;
@@ -183,6 +274,9 @@ public class Outtake extends Subsystem {
         if(currentActionSequence.equals("Outtake Sample")){
             outtakeSampleSequence();
         }
+        if(currentActionSequence.equals("Intake Claw Sample")){
+            intakeClawSequence();
+        }
 
 
         claw.setGripperPos(gripperAngle);
@@ -200,7 +294,7 @@ public class Outtake extends Subsystem {
         armAngle = 10;
         clawAngle = 65;
         clawYaw = 0;
-        setExtend(false);
+        fullRetract();
         claw.closeCLaw();
         robot.verticalSlides.slidesTarget = 400;
 

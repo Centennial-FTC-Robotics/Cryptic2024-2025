@@ -18,7 +18,7 @@ public class MotorTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        motor = hardwareMap.get(DcMotorEx.class, "slidesMotor");
+        motor = hardwareMap.get(DcMotorEx.class, "slideLeft");
         motor2 = hardwareMap.get(DcMotorEx.class, "slideRight");
         FtcDashboard dashboard = FtcDashboard.getInstance();
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
