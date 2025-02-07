@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.Cryptic.Commands.SampleActions;
 import org.Cryptic.Robot;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
@@ -57,5 +58,67 @@ public class SampleAuto extends LinearOpMode {
         TrajectoryActionBuilder park = prepareToPark.endTrajectory().fresh()
                 .setTangent(Math.toRadians(180))
                 .lineToX(30);
+
+        Action driveToScoreA = driveToScore.build();
+        Action firstSampleA = firstSample.build();
+        Action driveToScore2A = driveToScore2.build();
+        Action secondSampleA = secondSample.build();
+        Action driveToScore3A = driveToScore3.build();
+        Action thirdSampleA = thirdSample.build();
+        Action driveToScore4A = driveToScore4.build();
+        Action prepareToParkA = prepareToPark.build();
+        Action parkA = park.build();
+
+        while (!isStopRequested() && !opModeIsActive()) {
+
+        }
+
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        Actions.runBlocking(
+                new ParallelAction(
+                        new SequentialAction(
+                                robot.sampleActions.positionToScore(robot),
+                                driveToScoreA,
+                                robot.sampleActions.dropSample(robot),
+                                robot.sampleActions.reset(robot),
+
+                                firstSampleA,
+                                robot.sampleActions.positionToIntake(robot),
+                                robot.sampleActions.grabSample(robot),
+
+                                robot.sampleActions.positionToScore(robot),
+                                driveToScore2A,
+                                robot.sampleActions.dropSample(robot),
+                                robot.sampleActions.reset(robot),
+
+                                secondSampleA,
+                                robot.sampleActions.positionToIntake(robot),
+                                robot.sampleActions.rotateClaw(robot, 45),
+                                robot.sampleActions.grabSample(robot),
+
+                                robot.sampleActions.positionToScore(robot),
+                                driveToScore3A,
+                                robot.sampleActions.dropSample(robot),
+                                robot.sampleActions.reset(robot),
+
+                                thirdSampleA,
+                                robot.sampleActions.positionToIntake(robot),
+                                robot.sampleActions.rotateClaw(robot, 90),
+                                robot.sampleActions.grabSample(robot),
+
+                                robot.sampleActions.positionToScore(robot),
+                                driveToScore4A,
+                                robot.sampleActions.dropSample(robot),
+                                robot.sampleActions.reset(robot),
+
+                                prepareToParkA,
+                                parkA
+                                ),
+                        robot.autoActions.robotUpdate(robot)
+                )
+        );
     }
 }

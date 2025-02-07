@@ -1,6 +1,7 @@
 package org.Cryptic;
 
 import org.Cryptic.Commands.AutoActions;
+import org.Cryptic.Commands.SampleActions;
 import org.Cryptic.Commands.SpecimenCommands;
 import org.Cryptic.Subsystems.ClawArm;
 import org.Cryptic.Subsystems.Drivetrain;
@@ -23,6 +24,7 @@ public class Robot {
     public DrivetrainNoRR dtNoRR = new DrivetrainNoRR();
     public SpecimenCommands specimenCommands = new SpecimenCommands();
     public AutoActions autoActions = new AutoActions();
+    public SampleActions sampleActions = new SampleActions();
 
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
@@ -34,7 +36,8 @@ public class Robot {
             intakeSlides,
             imu,
             specimenCommands,
-            autoActions
+            autoActions,
+            sampleActions
     };
 
     public void initialize(LinearOpMode opmode) throws InterruptedException {

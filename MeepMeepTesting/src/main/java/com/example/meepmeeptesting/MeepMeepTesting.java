@@ -24,17 +24,19 @@ public class MeepMeepTesting {
 
         double t = 23.5;
 
+        double scoreX = 54;
+        double scoreY = 52;
 
         // Sample Auto
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*1.5-2.75), (t*2.5 + 2.75), Math.toRadians(180)))
                 .waitSeconds(2)
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .strafeToSplineHeading(new Vector2d(48, 42), Math.toRadians(270))
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .strafeToSplineHeading(new Vector2d(48, 40), Math.toRadians(305))
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .strafeToSplineHeading(new Vector2d(52, 25), Math.toRadians(0))
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .strafeToSplineHeading(new Vector2d(50, 10), Math.toRadians(180))
                 .setTangent(Math.toRadians(180))
                 .lineToX(30)

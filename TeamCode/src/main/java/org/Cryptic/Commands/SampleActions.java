@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystem;
 
-public class SampleAutoActions extends Subsystem {
+public class SampleActions extends Subsystem {
 
     private long startTime;
 
@@ -156,7 +156,13 @@ public class SampleAutoActions extends Subsystem {
                 robot.clawArm.closeCLaw();
             }
 
-            return !(hasBeenTime(350));
+            if (hasBeenTime(350)) {
+                robot.outtake.armAngle -= 8;
+                robot.outtake.clawAngle += 15;
+                robot.outtake.clawYaw = 0;
+            }
+
+            return !(hasBeenTime(500));
         }
     }
 
@@ -179,21 +185,22 @@ public class SampleAutoActions extends Subsystem {
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
                 initialized = true;
+                initTime();
             }
 
-            if (angle == 90) {
+            if (angle == 45) {
                 robot.outtake.clawSpinLeft();
-            } else if (angle == 180) {
+            } else if (angle == 90) {
                 robot.outtake.clawSpinLeft();
             }
 
-            if (angle == -90) {
+            if (angle == -45) {
                 robot.outtake.clawSpinRight();
-            } else if (angle == -180) {
+            } else if (angle == -90) {
                 robot.outtake.clawSpinRight();
             }
 
-            return false;
+            return !(hasBeenTime(300));
         }
     }
 
