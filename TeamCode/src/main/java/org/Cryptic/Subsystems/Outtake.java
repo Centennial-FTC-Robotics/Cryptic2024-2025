@@ -105,7 +105,7 @@ public class Outtake extends Subsystem {
 
     }
 
-    int outtakeSampleState = 0;
+    public int outtakeSampleState = 0;
     public void outtakeSample(){
 
         if(outtakeSampleState == 0){
@@ -140,6 +140,7 @@ public class Outtake extends Subsystem {
     public int intakeClawSampleState = 0;
 
     public void clawSpinRight(){
+
         clawYaw-=1;
 
         if(clawYaw<-2){
@@ -148,13 +149,12 @@ public class Outtake extends Subsystem {
 
     }
     public void clawSpinLeft(){
-        // @Daud had to switch clawSpinLeft and clawSpinRight
-
         clawYaw+=1;
 
         if(clawYaw >2){
             clawYaw =2;
         }
+
     }
 
     public void intakeClawSample(){
@@ -224,9 +224,9 @@ public class Outtake extends Subsystem {
     }
 
 
-    int outtakeSampleSequenceState = 0;
+    public int outtakeSampleSequenceState = 0;
 
-    private void outtakeSampleSequence(){
+    public void outtakeSampleSequence(){
 
 
 
@@ -281,7 +281,7 @@ public class Outtake extends Subsystem {
 
         claw.setGripperPos(gripperAngle);
 
-        claw.setArmAngle(armAngle);
+        claw.setArmAngle(armAngle+5);
 
         claw.setClawPos(clawAngle,clawYaw);
 

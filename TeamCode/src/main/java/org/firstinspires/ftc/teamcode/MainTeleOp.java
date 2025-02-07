@@ -126,21 +126,25 @@ public class MainTeleOp extends LinearOpMode {
             // Retract Horizontal Slides
             if (intakePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 robot.intakeSlides.retractSlides();
-            }
 
-            // Move Intake Down
-            if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                robot.intake.setIntakePitch(Intake.PitchState.DOWN);
             }
-
-            // Move Intake Up
 
 
             // Set Up Intake for Transfer
             //robot.intake.setPrimeIntake(bIntakeReader.getState());
 
             // Move Intake Rollers
-            robot.intake.setIntakePower(intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.4));
+            double intakePower = intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.4);
+            if (robot.intakeSlides.slidesMotor.getCurrentPosition() <= 100){
+                robot.intake.pitchState = Intake.PitchState.STOWED;
+            } else if (intakePower > 0.1) {
+                robot.intake.pitchState = Intake.PitchState.DOWN;
+            } else {
+                robot.intake.pitchState = Intake.PitchState.UP;
+            }
+
+            robot.intake.setIntakePower(intakePower);
+
             if(intakePad.wasJustPressed(GamepadKeys.Button.A)){
                 if(robot.outtake.intakeClawSampleState ==2){
                     robot.outtake.currentActionSequence=  "Intake Claw Sample";
@@ -155,6 +159,14 @@ public class MainTeleOp extends LinearOpMode {
             if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
                 //robot.intake.gamepadToTransferIntakeOuttake();
                 robot.outtake.clawSpinRight();
+            }
+
+            if (intakePad.wasJustPressed(GamepadKeys.Button.X)) {
+                if (robot.clawArm.clawOpened == true) {
+                    robot.clawArm.closeCLaw();
+                } else if (robot.clawArm.clawOpened == false) {
+                    robot.clawArm.openClaw();
+                }
             }
 
             dashboard.sendTelemetryPacket(packet);

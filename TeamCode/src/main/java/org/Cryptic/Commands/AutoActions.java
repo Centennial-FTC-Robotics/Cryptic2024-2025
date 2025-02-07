@@ -85,7 +85,7 @@ public class AutoActions extends Subsystem {
                 robot.specimenCommands.specimenUpdate();
             }
 
-            if (robot.specimenCommands.hasBeenTime(800)) {
+            if (robot.specimenCommands.hasBeenTime(300)) {
                 robot.specimenCommands.specimenUpdate();
             }
 
@@ -156,11 +156,38 @@ public class AutoActions extends Subsystem {
 
             packet.put("CURRENT SPECIMEN STATE", robot.specimenCommands.getSpecimenState());
 
-            return !(robot.specimenCommands.hasBeenTime(700));
+            return !(robot.specimenCommands.hasBeenTime(300));
         }
     }
 
     public Action specimenGrab(Robot robot) {
         return new specimenGrab(robot);
     }
+
+    public class liftOuttakeSlightly implements Action {
+        private boolean initialized = false;
+        private Robot robot = new Robot();
+        private long startTime = System.currentTimeMillis();
+
+        public liftOuttakeSlightly (Robot robot) {
+            this.robot = robot;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+                robot.outtake.armAngle = 45;
+                startTime = System.currentTimeMillis();
+            }
+
+            return !(System.currentTimeMillis() - startTime >= 100);
+        }
+
+    }
+
+    public Action liftOuttakeSlightly(Robot robot) {
+        return new liftOuttakeSlightly(robot);
+    }
+
 }

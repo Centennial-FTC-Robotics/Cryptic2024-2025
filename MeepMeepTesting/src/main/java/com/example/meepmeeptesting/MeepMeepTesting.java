@@ -1,7 +1,12 @@
 package com.example.meepmeeptesting;
 
+import com.acmerobotics.roadrunner.CompositeVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -19,82 +24,104 @@ public class MeepMeepTesting {
 
         double t = 23.5;
 
+
+        // Sample Auto
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*1.5-2.75), (t*2.5 + 2.75), Math.toRadians(180)))
+                .waitSeconds(2)
+                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(48, 42), Math.toRadians(270))
+                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(48, 40), Math.toRadians(305))
+                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(52, 25), Math.toRadians(0))
+                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225))
+                .strafeToSplineHeading(new Vector2d(50, 10), Math.toRadians(180))
+                .setTangent(Math.toRadians(180))
+                .lineToX(30)
+
+                /*
+                .setReversed(true)
+                .splineTo(new Vector2d(30, 40), Math.toRadians(145))
+                .setReversed(false)
+                .splineTo(new Vector2d(50, 50), Math.toRadians(45))
+                .setReversed(true)
+                .splineTo(new Vector2d(35, 35), Math.toRadians(160))
+                .setReversed(false)
+                .splineTo(new Vector2d(50, 50), Math.toRadians(45))
+                .setReversed(true)
+                .strafeToSplineHeading(new Vector2d(45, 24), Math.toRadians(0))
+                */
+                .build());
+
+
+        double rungY = 36;
+
+
+        /*
         // (NEW) 3 Specimen Auto
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*-0.5-2.75), (t*2.5 + 2.75), Math.toRadians(270)))
                 .waitSeconds(1)
-                .splineToConstantHeading(new Vector2d(-4, 33), Math.toRadians(270))
+                // DRIVE FORWARDS
+                .strafeToConstantHeading(new Vector2d(-7, 50))
+                .splineToConstantHeading(new Vector2d(-4, rungY), Math.toRadians(270))
+
+                // PUSH SAMPLES
                 .setTangent(Math.toRadians(135))
                 // Move to side
                 .splineToConstantHeading(new Vector2d(-37, 36.16), Math.toRadians(270))
                 // Move up
                 .splineToConstantHeading(new Vector2d(-38, 18), Math.toRadians(270))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-45, 12), Math.toRadians(90))
+                // Move up and right slightly
+                .splineToConstantHeading(new Vector2d(-42, 12), Math.toRadians(180), new TranslationalVelConstraint(20))
+                // Move down and right slightly
+                .splineToConstantHeading(new Vector2d(-45, 18), Math.toRadians(90), new TranslationalVelConstraint(20))
                 // Push
                 .splineToConstantHeading(new Vector2d(-45, 50), Math.toRadians(90))
                 .setTangent(Math.toRadians(270))
                 // Move Up
-                .splineToConstantHeading(new Vector2d(-45, 18), Math.toRadians(270))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-55, 12), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-45, 18), Math.toRadians(270), null, new ProfileAccelConstraint(-40, 40))
+                // Move up and right slightly
+                .splineToConstantHeading(new Vector2d(-50, 12), Math.toRadians(180), new TranslationalVelConstraint(20))
+                // Move down and right slightly
+                .splineToConstantHeading(new Vector2d(-55.5, 18), Math.toRadians(90), new TranslationalVelConstraint(20))
                 // Push
-                .splineToConstantHeading(new Vector2d(-55, 50), Math.toRadians(90))
-                .setTangent(Math.toRadians(270))
-                // Move Up
-                .splineToConstantHeading(new Vector2d(-55, 18), Math.toRadians(270))
-                // Move right
-                .splineToConstantHeading(new Vector2d(-58, 12), Math.toRadians(90))
-                // Push
-                .splineToConstantHeading(new Vector2d(-58, 50), Math.toRadians(90))
-                .setTangent(Math.toRadians(270))
-                // Move back
-                //.splineToConstantHeading(new Vector2d(-55, 47), Math.toRadians(270))
-                // Prepare for specimens
-                .splineToConstantHeading(new Vector2d(-38, 42.5), Math.toRadians(90))
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-55.5, 58.5), Math.toRadians(90))
 
-                // Head into Observation Zone
-                .splineTo(new Vector2d(-38, 58), Math.toRadians(90))
+                // DRIVE TO RUNG
+                .setTangent(Math.toRadians(-45))
+                .strafeToConstantHeading(new Vector2d(-10, 45))
+                .splineToConstantHeading(new Vector2d(0, rungY), Math.toRadians(270))
 
-                // Pick up Specimen
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(0))
                 // Go to rung
-                .splineToConstantHeading(new Vector2d(10, 50), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(10, 33), Math.toRadians(270))
+                //.splineToConstantHeading(new Vector2d(0, 40), Math.toRadians(270))
+                //.splineToConstantHeading(new Vector2d(4, 50), Math.toRadians(270))
+                //.splineToConstantHeading(new Vector2d(0, rungY), Math.toRadians(270))
 
-                // Hang specimen
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90))
-                // Go Back to Observation Zone
-                .splineToConstantHeading(new Vector2d(0, 45), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-38, 58), Math.toRadians(180))
-                /*
-                // Pick up Specimen
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
-                // Go to rung
-                .splineToConstantHeading(new Vector2d(-9.73, 35.77), Math.toRadians(270))
-                // Hang specimen
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90))
-                // Go Back to Observation Zone
-                .splineToConstantHeading(new Vector2d(-38, 58), Math.toRadians(90))
+                // DRIVE TO OBSERVATION
+                .setReversed(true)
+                .strafeToConstantHeading(new Vector2d(-38, 58))
 
-                // Pick up Specimen
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
-                // Go to rung
-                .splineToConstantHeading(new Vector2d(-9.73, 35.77), Math.toRadians(270))
-                // Hang specimen
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90))
-                // Go Back to Observation Zone
-                .splineTo(new Vector2d(-38, 58), Math.toRadians(90))
-                 */
+
+                // DRIVE TO RUNG
+                .setReversed(false)
+                .setTangent(Math.toRadians(-45))
+                .strafeToConstantHeading(new Vector2d(-10, 50))
+                .splineToConstantHeading(new Vector2d(10, rungY), Math.toRadians(270))
+
+                // DRIVE TO OBSERVATION
+                .setReversed(true)
+                .strafeToConstantHeading(new Vector2d(-38, 58))
+
+                .setReversed(false)
+                .setTangent(Math.toRadians(-45))
+                .strafeToConstantHeading(new Vector2d(0, 50))
+                .splineToConstantHeading(new Vector2d(20, rungY), Math.toRadians(270))
+
+                .setReversed(true)
+                .strafeToConstantHeading(new Vector2d(-38, 58))
+
                 .build());
-
+*/
 
         // 4 Sample Auto
         /*

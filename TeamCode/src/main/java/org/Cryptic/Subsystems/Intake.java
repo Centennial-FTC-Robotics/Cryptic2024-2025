@@ -30,8 +30,8 @@ public class Intake extends Subsystem {
 
     public static double maxSlideSpeed;
 
-    public static double pitchDown = 0.5;
-    public static double pitchUp = 0.7;
+    public static double pitchDown = 0.65;
+    public static double pitchUp = 1;
     public static double pitchStowed = 0.7;
     public static double pitchTransfer = .6;
 
@@ -58,7 +58,7 @@ public class Intake extends Subsystem {
     }
 
 
-    public static PitchState pitchState = PitchState.UP;
+    public static PitchState pitchState = PitchState.STOWED;
     public static boolean primed = false;
 
     @Override
@@ -77,7 +77,7 @@ public class Intake extends Subsystem {
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        setIntakePitch(PitchState.UP);
+        setIntakePitch(PitchState.STOWED);
         setPrimeIntake(false);
         setIntakePower(0);
     }
@@ -126,7 +126,7 @@ public class Intake extends Subsystem {
         if (primed) {
             transferServo.setPosition(0.5);
         } else {
-            transferServo.setPosition(0.7);
+            transferServo.setPosition(0.65);
         }
         isPrimed = primed;
     }
@@ -134,12 +134,8 @@ public class Intake extends Subsystem {
     public void setIntakePower(double power) {
         intakeMotor.setPower(power);
         if(power>.1){
-            pitchState = PitchState.DOWN;
+            //pitchState = PitchState.DOWN;
             primed = false;
-
-        }else{
-            pitchState = pitchState.UP;
-
         }
     }
 

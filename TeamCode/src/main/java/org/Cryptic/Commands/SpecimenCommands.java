@@ -21,7 +21,7 @@ public class SpecimenCommands extends Subsystem {
 
     public enum specimenStates {
         DEFAULT,
-        EXTEND,
+        PRIME,
         CLOSE_CLAW,
         POSITION_TO_SCORE,
         RELEASE_SPECIMEN,
@@ -61,9 +61,9 @@ public class SpecimenCommands extends Subsystem {
             case DEFAULT:
                 initTime();
                 robot.outtake.fullRetract();
-                specimenState = specimenStates.EXTEND;
+                specimenState = specimenStates.PRIME;
                 break;
-            case EXTEND:
+            case PRIME:
                 if (hasBeenTime(100)) {
                     robot.outtake.intakeSpecimenDefaultPosition();
                     specimenState = specimenStates.CLOSE_CLAW;
@@ -82,7 +82,7 @@ public class SpecimenCommands extends Subsystem {
                 robot.outtake.clawYaw = 0;
                 robot.outtake.fullExtend();
                 robot.outtake.claw.closeCLaw();
-                robot.verticalSlides.slidesTarget = 1340;
+                robot.verticalSlides.slidesTarget = 1345;
 
                 specimenState = specimenStates.RELEASE_SPECIMEN;
                 //}
@@ -90,7 +90,7 @@ public class SpecimenCommands extends Subsystem {
             case RELEASE_SPECIMEN:
                 specimenState = specimenStates.RESET;
                 robot.outtake.claw.openClaw();
-
+                robot.outtake.clawAngle -=15;
                 robot.outtake.fullRetract();
 
                 initTime();

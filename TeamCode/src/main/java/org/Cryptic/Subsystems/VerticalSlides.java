@@ -53,7 +53,7 @@ public class VerticalSlides extends Subsystem {
 
     public static int off = 0;
 
-    public int[] targets = {10, 175, 500-off, 1100-off, 1500-off, 2155-off};
+    public int[] targets = {10, 175, 500-off, 1100-off, 1500-off, 2050-off};
     public double manualPower = 0;
 
     public int pos = -1;
