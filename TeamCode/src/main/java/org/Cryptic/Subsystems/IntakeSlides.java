@@ -119,7 +119,7 @@ public class IntakeSlides extends Subsystem {
         tel.update();
 
         if(Math.abs(manualPower) > 0.05) {
-            power = Range.clip(manualPower, -0.5, 0.5);
+            power = Range.clip(manualPower, -1, 1);
             sTarget = pos;
         } else {
             power = Range.clip(error*slideP + errorSum*slideI + speed*slideD + slideF,
