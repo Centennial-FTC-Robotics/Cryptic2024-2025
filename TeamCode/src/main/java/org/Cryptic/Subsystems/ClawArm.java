@@ -76,13 +76,13 @@ public class ClawArm extends Subsystem{
             spinVal = -.25;
         }
         else if(spinCounter == -2){
-            spinVal = -.4;
+            spinVal = -.5;
         }
         else if(spinCounter ==1){
             spinVal = .25;
         }
         else if(spinCounter == 2){
-            spinVal = .4;
+            spinVal = .5;
         }
         leftClawServo.setPosition(Range.clip((1-pitchVal)+spinVal,0,1));
         rightClawServo.setPosition(Range.clip(((pitchVal)) + spinVal,0,1));

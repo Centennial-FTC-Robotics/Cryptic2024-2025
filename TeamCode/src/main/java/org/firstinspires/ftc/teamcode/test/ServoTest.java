@@ -21,7 +21,7 @@ public class ServoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        servo = hardwareMap.get(Servo.class, "leftPitchServo");
+        servo = hardwareMap.get(Servo.class, "transferServo");
         servo2 = hardwareMap.get(Servo.class, "rightPitchServo");
         FtcDashboard dashboard = FtcDashboard.getInstance();
 

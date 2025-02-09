@@ -31,26 +31,32 @@ public class SampleAuto extends LinearOpMode {
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
+        double scoreX = 54;
+        double scoreY = 52;
+
         TrajectoryActionBuilder driveToScore = drive.actionBuilder(initialPose)
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225));
+            .stopAndAdd(robot.sampleActions.positionToScore(robot))
+            .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
+            .stopAndAdd(robot.sampleActions.dropSample(robot))
+            .stopAndAdd(robot.sampleActions.reset(robot));
 
         TrajectoryActionBuilder firstSample = driveToScore.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(48, 42), Math.toRadians(270));
+            .strafeToSplineHeading(new Vector2d(48, 46), Math.toRadians(270));
 
         TrajectoryActionBuilder driveToScore2 = firstSample.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225));
+            .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225));
 
         TrajectoryActionBuilder secondSample = driveToScore2.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(48, 40), Math.toRadians(305));
+            .strafeToSplineHeading(new Vector2d(46, 40), Math.toRadians(305));
 
         TrajectoryActionBuilder driveToScore3 = secondSample.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225));
+            .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225));
 
         TrajectoryActionBuilder thirdSample = driveToScore3.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(52, 25), Math.toRadians(0));
+                .strafeToSplineHeading(new Vector2d(54, 25), Math.toRadians(0));
 
         TrajectoryActionBuilder driveToScore4 = thirdSample.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(57, 54), Math.toRadians(225));
+                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225));
 
         TrajectoryActionBuilder prepareToPark = driveToScore4.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(50, 10), Math.toRadians(180));
@@ -80,10 +86,8 @@ public class SampleAuto extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction(
                         new SequentialAction(
-                                robot.sampleActions.positionToScore(robot),
                                 driveToScoreA,
-                                robot.sampleActions.dropSample(robot),
-                                robot.sampleActions.reset(robot),
+
 
                                 firstSampleA,
                                 robot.sampleActions.positionToIntake(robot),

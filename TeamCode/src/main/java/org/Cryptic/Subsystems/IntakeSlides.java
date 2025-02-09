@@ -58,6 +58,8 @@ public class IntakeSlides extends Subsystem {
 
         slidesMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        sTarget = 0;
+
     }
 
     public void setSlidesTarget(int target) {

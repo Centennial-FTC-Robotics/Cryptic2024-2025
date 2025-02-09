@@ -33,7 +33,7 @@ public class Intake extends Subsystem {
     public static double pitchDown = 0.6;
     public static double pitchUp = 0.8;
     public static double pitchStowed = 0.7;
-    public static double pitchTransfer = .6;
+    public static double pitchTransfer = .65;
 
     private boolean isPrimed;
 
@@ -51,9 +51,10 @@ public class Intake extends Subsystem {
     public enum States {
         PRIME_INTAKE,
         PRIME_OUTTAKE,
-        POSITION_INTAKE,
+        MOVE_INTAKE,
+        POSITION_DOWN,
         GRAB_SAMPLE,
-        OUTTAKE_UP,
+        LIFT,
         MOVE_OUTTAKE
     }
 
@@ -115,8 +116,8 @@ public class Intake extends Subsystem {
                 rightPitchServo.setPosition(1-pitchStowed);
                 break;
             case TRANSFER:
-                leftPitchServo.setPosition(pitchUp);
-                rightPitchServo.setPosition(1-pitchUp);
+                leftPitchServo.setPosition(pitchTransfer);
+                rightPitchServo.setPosition(1-pitchTransfer);
                 break;
         }
     }
@@ -124,9 +125,9 @@ public class Intake extends Subsystem {
     public void setPrimeIntake(boolean primed) {
         // TODO: Move servo to set up the intake for transfer to outtake
         if (primed) {
-            transferServo.setPosition(0.5);
+            transferServo.setPosition(0.45);
         } else {
-            transferServo.setPosition(0.65);
+            transferServo.setPosition(0.8);
         }
         isPrimed = primed;
     }
@@ -148,38 +149,34 @@ public class Intake extends Subsystem {
         setPrimeIntake(primed);
     }
 
-
-    public void transferIntakeOuttake (States cool) {
-        switch (cool) {
+    public static States transferState = null;
+    public void transferIntakeOuttake () {
+        switch (transferState) {
             case PRIME_INTAKE:
-                pitchState = PitchState.UP;
+                pitchState = PitchState.TRANSFER;
                 primed = false;
-                robot.intakeSlides.setSlidesTarget(300);
-
+                robot.intakeSlides.setSlidesTarget(400);
                 break;
             case PRIME_OUTTAKE:
                 robot.outtake.fullRetract();
                 primed = true;
-                robot.outtake.gripperAngle = 0.87;
-                robot.outtake.clawAngle = 84;
-                robot.outtake.armAngle = 140;
+                robot.outtake.gripperAngle = 0.7;
+                robot.outtake.clawAngle = 90;
+                robot.outtake.armAngle = 137;
                 robot.outtake.clawYaw = -2;
-                robot.outtake.claw.openClaw();
                 robot.verticalSlides.retractSlides();
                 break;
-            case POSITION_INTAKE:
-                robot.intakeSlides.setSlidesTarget(185);
-
+            case MOVE_INTAKE:
+                robot.intakeSlides.setSlidesTarget(230);
+                break;
+            case POSITION_DOWN:
+                robot.outtake.armAngle=150;
                 break;
             case GRAB_SAMPLE:
-                robot.outtake.armAngle+=6;
                 robot.clawArm.closeCLaw();
                 break;
-            case OUTTAKE_UP:
-                robot.verticalSlides.slidesTarget+=400;
-                robot.intakeSlides.setSlidesTarget(205);
-                transferServo.setPosition(.6);
-
+            case LIFT:
+                robot.verticalSlides.slidesTarget=400;
                 break;
             case MOVE_OUTTAKE:
                 robot.outtake.clawAngle = 90;
@@ -190,19 +187,19 @@ public class Intake extends Subsystem {
         }
     }
 
-    public static int sampleState = 0;
-
-    public void gamepadToTransferIntakeOuttake () {
+    public static int inc = 0;
+    public void incTransferIntakeOuttakeState () {
         // Pretty jank but it converts a gamepad press into a State
-        sampleState+=1;
-        if(sampleState>6){
-            sampleState = 1;
+        inc+=1;
+        if(inc>7){
+            inc = 1;
         }
         int count = 0;
         for (States i : States.values()) {
             count += 1;
-            if (sampleState == count) {
-                transferIntakeOuttake(i);
+            if (inc == count) {
+                transferState = i;
+                transferIntakeOuttake();
             }
         }
     }

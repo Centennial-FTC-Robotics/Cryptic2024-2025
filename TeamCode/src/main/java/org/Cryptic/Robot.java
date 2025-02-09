@@ -29,10 +29,11 @@ public class Robot {
     public Subsystem[] subsystems = new Subsystem[] {
             dt,
             clawArm,
-            outtake,
-            verticalSlides,
             // outtake depends on clawArm
+            outtake,
             intake,
+            verticalSlides,
+            // init slides after intake so intake pitch servos can move up in time
             intakeSlides,
             imu,
             specimenCommands,

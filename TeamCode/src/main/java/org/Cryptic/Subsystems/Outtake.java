@@ -200,18 +200,18 @@ public class Outtake extends Subsystem {
 
         if(intakeClawSampleSequenceState ==0 && currentActionSequence.equals("Intake Claw Sample") ){
             robot.clawArm.openClaw();
-            armAngle  +=8;
-            clawAngle -=17;
+            armAngle  +=12;
+            clawAngle -=19;
             intakeClawSampleSequenceState +=1;
             initTime();
         }
-        else if(intakeClawSampleSequenceState ==1 && hasBeenTime(175)){
+        else if(intakeClawSampleSequenceState ==1 && hasBeenTime(250)){
             robot.clawArm.closeCLaw();
             intakeClawSampleSequenceState +=1;
             initTime();
         }
 
-        else if(intakeClawSampleSequenceState ==2 && hasBeenTime(200)){
+        else if(intakeClawSampleSequenceState ==2 && hasBeenTime(400)){
             armAngle-=8;
             clawAngle+=15;
             clawYaw = 0;

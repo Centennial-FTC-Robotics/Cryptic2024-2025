@@ -30,6 +30,7 @@ public class SampleActions extends Subsystem {
 
         public positionToScore (Robot robot) {
             this.robot = robot;
+            initTime();
         }
 
         @Override
@@ -43,7 +44,7 @@ public class SampleActions extends Subsystem {
 
             robot.verticalSlides.slidesTarget = 2050;
 
-            return false;
+            return !(hasBeenTime(300));
         }
     }
 
@@ -124,7 +125,7 @@ public class SampleActions extends Subsystem {
                 robot.outtake.armAngle = 151;
             }
 
-            if (hasBeenTime(250)) {
+            if (hasBeenTime(150)) {
                 robot.clawArm.openClaw();
             }
             return !(hasBeenTime(350));
@@ -147,18 +148,18 @@ public class SampleActions extends Subsystem {
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
                 initialized = true;
-                robot.outtake.armAngle  +=8;
-                robot.outtake.clawAngle -=17;
+                robot.outtake.armAngle  +=12;
+                robot.outtake.clawAngle -=19;
                 initTime();
             }
 
-            if (hasBeenTime(200)) {
+            if (hasBeenTime(300)) {
                 robot.clawArm.closeCLaw();
             }
 
-            if (hasBeenTime(350)) {
-                robot.outtake.armAngle -= 8;
-                robot.outtake.clawAngle += 15;
+            if (hasBeenTime(450)) {
+                robot.outtake.armAngle -= 12;
+                robot.outtake.clawAngle += 19;
                 robot.outtake.clawYaw = 0;
             }
 
@@ -188,19 +189,21 @@ public class SampleActions extends Subsystem {
                 initTime();
             }
 
+            // RIGHT SPINS IT CLOCKWISE I THINK
             if (angle == 45) {
-                robot.outtake.clawSpinLeft();
+                robot.outtake.clawSpinRight();
             } else if (angle == 90) {
-                robot.outtake.clawSpinLeft();
+                robot.outtake.clawSpinRight();
             }
 
             if (angle == -45) {
-                robot.outtake.clawSpinRight();
+                robot.outtake.clawSpinLeft();
             } else if (angle == -90) {
-                robot.outtake.clawSpinRight();
+                robot.outtake.clawSpinLeft();
+
             }
 
-            return !(hasBeenTime(300));
+            return !(hasBeenTime(500));
         }
     }
 

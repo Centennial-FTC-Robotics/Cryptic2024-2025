@@ -112,6 +112,10 @@ public class MainTeleOp extends LinearOpMode {
                 robot.outtake.outtakeSample();
             }
 
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                robot.intake.incTransferIntakeOuttakeState();
+            }
+
 
             // GAMEPAD 2
 
@@ -135,7 +139,9 @@ public class MainTeleOp extends LinearOpMode {
 
             // Move Intake Rollers
             double intakePower = intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.4);
-            if (robot.intakeSlides.slidesMotor.getCurrentPosition() <= 100){
+            if (robot.intake.inc < 5 && robot.intake.inc != 0) { // this is kinda retarded but whatever
+                robot.intake.pitchState = Intake.PitchState.TRANSFER;
+            } else if (robot.intakeSlides.slidesMotor.getCurrentPosition() <= 100){
                 robot.intake.pitchState = Intake.PitchState.STOWED;
             } else if (intakePower > 0.1) {
                 robot.intake.pitchState = Intake.PitchState.DOWN;

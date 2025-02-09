@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @Config
 public class VerticalSlides extends Subsystem {
 
-    public static double slideP = 0.005;
+    public static double slideP = 0.008;
     public static double slideI = 0.0;
     public static double slideD = 0.0;
     public static double slideF = 0.1;
@@ -34,7 +34,7 @@ public class VerticalSlides extends Subsystem {
     public static double pivotUp = 0.73;
 
     public static double maxUpSpeed = 1.0;
-    public static double maxDownSpeed = 0.15;
+    public static double maxDownSpeed = 0.3;
 
     public int slidesTarget = 10;
 
