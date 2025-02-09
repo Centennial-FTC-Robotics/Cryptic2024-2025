@@ -30,7 +30,6 @@ public class SampleActions extends Subsystem {
 
         public positionToScore (Robot robot) {
             this.robot = robot;
-            initTime();
         }
 
         @Override
@@ -38,9 +37,10 @@ public class SampleActions extends Subsystem {
             if (!initialized) {
                 initialized = true;
                 robot.outtake.outtakeSampleState = 0;
+                robot.outtake.outtakeSample();
+                initTime();
             }
 
-            robot.outtake.outtakeSample();
 
             robot.verticalSlides.slidesTarget = 2050;
 
@@ -209,6 +209,38 @@ public class SampleActions extends Subsystem {
 
     public Action rotateClaw (Robot robot, int angle) {
         return new rotateClaw(robot, angle);
+    }
+
+    public class transfer implements Action {
+
+        private boolean initialized = false;
+        private Robot robot = new Robot();
+
+        private int increment = 1;
+
+        public transfer(Robot robot) {
+            this.robot = robot;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+                robot.intake.incTransferIntakeOuttakeState();
+                robot.intake.inc = 0;
+                initTime();
+            }
+            if (hasBeenTime(400 * increment)) {
+                robot.intake.incTransferIntakeOuttakeState();
+                increment += 1;
+            }
+            return !(increment == 8);
+            //return !(System.currentTimeMillis() - startTime >= 500);
+        }
+
+    }
+    public Action transfer(Robot robot) {
+        return new transfer(robot);
     }
 
 }

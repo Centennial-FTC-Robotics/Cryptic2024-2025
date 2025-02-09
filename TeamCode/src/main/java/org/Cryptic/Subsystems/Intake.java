@@ -30,7 +30,7 @@ public class Intake extends Subsystem {
 
     public static double maxSlideSpeed;
 
-    public static double pitchDown = 0.6;
+    public static double pitchDown = 0.57;
     public static double pitchUp = 0.8;
     public static double pitchStowed = 0.7;
     public static double pitchTransfer = .65;
@@ -155,22 +155,25 @@ public class Intake extends Subsystem {
             case PRIME_INTAKE:
                 pitchState = PitchState.TRANSFER;
                 primed = false;
-                robot.intakeSlides.setSlidesTarget(400);
+                robot.intakeSlides.setSlidesTarget(270);
                 break;
             case PRIME_OUTTAKE:
                 robot.outtake.fullRetract();
                 primed = true;
-                robot.outtake.gripperAngle = 0.7;
+                robot.outtake.gripperAngle = 0.6;
                 robot.outtake.clawAngle = 90;
-                robot.outtake.armAngle = 137;
                 robot.outtake.clawYaw = -2;
+                robot.outtake.armAngle = 137;
+
                 robot.verticalSlides.retractSlides();
                 break;
             case MOVE_INTAKE:
-                robot.intakeSlides.setSlidesTarget(230);
+                robot.outtake.armAngle=148;
                 break;
             case POSITION_DOWN:
-                robot.outtake.armAngle=150;
+
+                robot.intakeSlides.setSlidesTarget(225);
+                robot.outtake.clawAngle = 85;
                 break;
             case GRAB_SAMPLE:
                 robot.clawArm.closeCLaw();
