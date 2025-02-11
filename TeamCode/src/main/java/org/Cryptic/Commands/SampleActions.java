@@ -78,6 +78,30 @@ public class SampleActions extends Subsystem {
         return new dropSample(robot);
     }
 
+    public class hangSlides implements Action {
+        private boolean initialized = false;
+        private Robot robot = new Robot();
+
+        public hangSlides (Robot robot) {
+            this.robot = robot;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+                robot.verticalSlides.slidesTarget = 500;
+                robot.outtake.fullExtend();
+            }
+            robot.verticalSlides.update();
+
+            return !(hasBeenTime(1000));
+        }
+    }
+    public Action hangSlides (Robot robot) {
+        return new hangSlides(robot);
+    }
+
     public class reset implements Action {
         private boolean initialized = false;
         private Robot robot = new Robot();

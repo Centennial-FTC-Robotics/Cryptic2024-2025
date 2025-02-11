@@ -25,17 +25,19 @@ public class TestMeepMeep {
         double scoreX = 54;
         double scoreY = 52;
 
-        double rungY = 36;
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*1.5-2.75), (t*2.5 + 2.75), Math.toRadians(180)))
-                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
-                        .strafeToLinearHeading(new Vector2d(54,43),Math.toRadians(-110))
-                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
-                        .strafeToLinearHeading(new Vector2d(54,43),Math.toRadians(-80))
-                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
-                        .strafeToLinearHeading(new Vector2d(50,27),Math.toRadians(-12))
-                .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
-
+                //9.74 seconds
+                .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(54,43),Math.toRadians(-104))
+                .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(54,43),Math.toRadians(-71))
+                .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(50,27),Math.toRadians(-1))
+                .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(25,10,Math.toRadians(180)),Math.toRadians(180))
                 .build());
+
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
                 .setDarkMode(true)
