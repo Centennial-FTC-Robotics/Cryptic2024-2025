@@ -308,10 +308,39 @@ public class AutoActions extends Subsystem {
         }
 
     }
-
     public Action ActiveIntakeRun(Robot robot) {
         return new ActiveIntakeRun(robot);
     }
+
+
+    public class lowerActiveIntake implements Action {
+
+        private boolean initialized = false;
+        private Robot robot = new Robot();
+        private long startTime = System.currentTimeMillis();
+
+        public lowerActiveIntake(Robot robot) {
+            this.robot = robot;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+
+                robot.intake.pitchState = Intake.PitchState.DOWN;
+                robot.intake.setIntakePitch(Intake.PitchState.DOWN);
+                startTime = System.currentTimeMillis();
+            }
+
+            return !(System.currentTimeMillis() - startTime >= 100);
+        }
+
+    }
+    public Action lowerActiveIntake(Robot robot) {
+        return new lowerActiveIntake(robot);
+    }
+
 
     public class ActiveIntakeExpel implements Action {
 
