@@ -45,7 +45,7 @@ public class SpecimenAuto extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-4, rungY), Math.toRadians(270));
 
         TrajectoryActionBuilder pushSamples = driveForwards.endTrajectory().fresh()
-                .afterDisp(10,robot.autoActions.specimenIntake(robot))
+                .afterDisp(10,robot.specimenActions.specimenIntake(robot))
                 .setTangent(Math.toRadians(135))
                 // Move to side
                 .splineToConstantHeading(new Vector2d(-20, 50), Math.toRadians(180))
@@ -72,7 +72,7 @@ public class SpecimenAuto extends LinearOpMode {
 
         TrajectoryActionBuilder driveToRung = pushSamples.endTrajectory().fresh()
                 .setTangent(Math.toRadians(-45))
-                .afterDisp(15, robot.autoActions.specimenScore(robot))
+                .afterDisp(15, robot.specimenActions.specimenScore(robot))
                 .strafeToConstantHeading(new Vector2d(-2, 50))
                 .splineToConstantHeading(new Vector2d(2, rungY), Math.toRadians(270));
 
@@ -81,33 +81,33 @@ public class SpecimenAuto extends LinearOpMode {
         TrajectoryActionBuilder driveToObservation = driveToRung.endTrajectory().fresh()
                 .waitSeconds(releaseDelay)
                 .setReversed(true)
-                .afterDisp(10, robot.autoActions.specimenIntake(robot))
+                .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .strafeToConstantHeading(new Vector2d(-38, observationY));
 
         TrajectoryActionBuilder driveToRung2 = driveToObservation.endTrajectory().fresh()
                 .setReversed(false)
                 .setTangent(Math.toRadians(-45))
-                .afterDisp(10, robot.autoActions.specimenScore(robot))
+                .afterDisp(10, robot.specimenActions.specimenScore(robot))
                 .strafeToConstantHeading(new Vector2d(4, 50))
                 .splineToConstantHeading(new Vector2d(7, rungY), Math.toRadians(270));
 
         TrajectoryActionBuilder driveToObservation2 = driveToRung2.endTrajectory().fresh()
                 .waitSeconds(releaseDelay)
                 .setReversed(true)
-                .afterDisp(10, robot.autoActions.specimenIntake(robot))
+                .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .strafeToConstantHeading(new Vector2d(-38, observationY));
 
         TrajectoryActionBuilder driveToRung3 = driveToObservation2.endTrajectory().fresh()
                 .setReversed(false)
                 .setTangent(Math.toRadians(-45))
-                .afterDisp(10, robot.autoActions.specimenScore(robot))
+                .afterDisp(10, robot.specimenActions.specimenScore(robot))
                 .strafeToConstantHeading(new Vector2d(0, 50))
                 .splineToConstantHeading(new Vector2d(13, rungY), Math.toRadians(270));
 
         TrajectoryActionBuilder driveToObservation3 = driveToRung3.endTrajectory().fresh()
                 .waitSeconds(releaseDelay)
                 .setReversed(true)
-                .afterDisp(10, robot.autoActions.specimenIntake(robot))
+                .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .strafeToConstantHeading(new Vector2d(-38, observationY));
 
         Action driveForwardsA = driveForwards.build();
@@ -131,44 +131,44 @@ public class SpecimenAuto extends LinearOpMode {
                 new ParallelAction(
                     new SequentialAction(
                         // PRELOAD SCORE
-                        robot.autoActions.specimenScore(robot),
+                        robot.specimenActions.specimenScore(robot),
                         driveForwardsA,
 
                         // PUSH SAMPLES
-                        robot.autoActions.specimenRelease(robot),
+                        robot.specimenActions.specimenRelease(robot),
                         pushSamplesA,
-                        robot.autoActions.specimenGrab(robot),
+                        robot.specimenActions.specimenGrab(robot),
                         // Lift the outtake slightly to lift specimen off the wall
-                        robot.autoActions.liftOuttakeSlightly(robot),
+                        robot.specimenActions.liftOuttakeSlightly(robot),
 
                         // SECOND TIME SCORING
                         driveToRungA,
                         new ParallelAction(
-                            robot.autoActions.specimenRelease(robot),
+                            robot.specimenActions.specimenRelease(robot),
                             driveToObservationA
                         ),
-                        robot.autoActions.specimenGrab(robot),
-                        robot.autoActions.liftOuttakeSlightly(robot),
+                        robot.specimenActions.specimenGrab(robot),
+                        robot.specimenActions.liftOuttakeSlightly(robot),
 
                         // THIRD TIME SCORING
                         driveToRung2A,
                         // REPEAT STUFF BEFORE TO CYCLE AGAIN
                         new ParallelAction(
-                            robot.autoActions.specimenRelease(robot),
+                            robot.specimenActions.specimenRelease(robot),
                             driveToObservation2A
                         ),
-                        robot.autoActions.specimenGrab(robot),
-                        robot.autoActions.liftOuttakeSlightly(robot),
+                        robot.specimenActions.specimenGrab(robot),
+                        robot.specimenActions.liftOuttakeSlightly(robot),
 
                         // FOURTH TIME SCORING
                         driveToRung3A,
                         // PARK IN OBSERVATION ZONE
                         new ParallelAction(
-                            robot.autoActions.specimenRelease(robot),
+                            robot.specimenActions.specimenRelease(robot),
                             driveToObservation3A
                         )
                             ),
-                    robot.autoActions.robotUpdate(robot)
+                    robot.specimenActions.robotUpdate(robot)
                 )
         );
     }

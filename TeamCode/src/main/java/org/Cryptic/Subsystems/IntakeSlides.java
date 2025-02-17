@@ -32,7 +32,7 @@ public class IntakeSlides extends Subsystem {
     public static double maxBackSpeed = 0.8;
     public static double maxForwardSpeed = 1.0;
 
-    public static double slideP = 0.005;
+    public static double slideP = 0.008;
     public static double slideI = 0.0;
     public static double slideD = 0;
     public static double slideF = 0.0;
@@ -46,8 +46,8 @@ public class IntakeSlides extends Subsystem {
         slidesMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
-        while(slidesMotor.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
-            slidesMotor.setPower(-0.4);
+        while(slidesMotor.getCurrent(CurrentUnit.AMPS) < 4.5 && opmode.opModeInInit()) {
+            slidesMotor.setPower(-0.6);
         }
 
         slidesMotor.setPower(0);

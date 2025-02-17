@@ -4,13 +4,15 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystem;
 import org.Cryptic.Subsystems.Intake;
 
-public class AutoActions extends Subsystem {
+public class SpecimenActions extends Subsystem {
 
     public void init(LinearOpMode opmode) throws InterruptedException {
 
@@ -43,126 +45,33 @@ public class AutoActions extends Subsystem {
         return new robotUpdate(robot);
     }
 
-    public class specimenScore implements Action {
-        private boolean initialized = false;
-        private Robot robot = new Robot();
-
-        public specimenScore (Robot robot) {
-            this.robot = robot;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                initialized = true;
-                robot.specimenCommands.setSpecimenState(SpecimenCommands.specimenStates.POSITION_TO_SCORE);
-                robot.specimenCommands.specimenUpdate();
-            }
-            packet.put("RAN SPECIMEN SCORE", "");
-
-            packet.put("CURRENT SPECIMEN STATE", robot.specimenCommands.getSpecimenState());
-
-            return false;
-        }
-    }
-
     public Action specimenScore(Robot robot) {
-        return new specimenScore(robot);
-    }
-
-    public class specimenRelease implements Action {
-        private boolean initialized = false;
-        private Robot robot = new Robot();
-
-        public specimenRelease (Robot robot) {
-            this.robot = robot;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                initialized = true;
-                robot.specimenCommands.setSpecimenState(SpecimenCommands.specimenStates.RELEASE_SPECIMEN);
-                robot.specimenCommands.specimenUpdate();
-            }
-
-            if (robot.specimenCommands.hasBeenTime(500)) {
-                robot.specimenCommands.specimenUpdate();
-            }
-
-            packet.put("RAN SPECIMEN RELEASE", "");
-
-            packet.put("CURRENT SPECIMEN STATE", robot.specimenCommands.getSpecimenState());
-
-            return !(robot.specimenCommands.getSpecimenState() == SpecimenCommands.specimenStates.DEFAULT);
-        }
+        return new SequentialAction(
+                robot.baseActions.SetSpecimenState(robot, SpecimenCommands.specimenStates.POSITION_TO_SCORE)
+        );
     }
 
     public Action specimenRelease(Robot robot) {
-        return new specimenRelease(robot);
-    }
-
-    public class specimenIntake implements Action {
-        private boolean initialized = false;
-        private Robot robot = new Robot();
-
-        public specimenIntake (Robot robot) {
-            this.robot = robot;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                initialized = true;
-                robot.specimenCommands.setSpecimenState(SpecimenCommands.specimenStates.DEFAULT);
-                robot.specimenCommands.specimenUpdate();
-            }
-
-            if (robot.specimenCommands.hasBeenTime(100)) {
-                robot.specimenCommands.specimenUpdate();
-            }
-
-            packet.put("RAN SPECIMEN INTAKE", "");
-
-            packet.put("CURRENT SPECIMEN STATE", robot.specimenCommands.getSpecimenState());
-
-            return !(robot.specimenCommands.getSpecimenState() == SpecimenCommands.specimenStates.CLOSE_CLAW);
-        }
+        return new SequentialAction(
+                robot.baseActions.SetSpecimenState(robot, SpecimenCommands.specimenStates.RELEASE_SPECIMEN),
+                new SleepAction(0.5),
+                robot.baseActions.SetSpecimenState(robot, SpecimenCommands.specimenStates.RESET)
+        );
     }
 
     public Action specimenIntake(Robot robot) {
-        return new specimenIntake(robot);
-    }
-
-    public class specimenGrab implements Action {
-        private boolean initialized = false;
-        private Robot robot = new Robot();
-
-        int count = 0;
-
-        public specimenGrab (Robot robot) {
-            this.robot = robot;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                initialized = true;
-                robot.specimenCommands.setSpecimenState(SpecimenCommands.specimenStates.CLOSE_CLAW);
-                robot.specimenCommands.specimenUpdate();
-            }
-
-            count++;
-            packet.put("RAN SPECIMEN GRAB", count);
-
-            packet.put("CURRENT SPECIMEN STATE", robot.specimenCommands.getSpecimenState());
-
-            return !(robot.specimenCommands.hasBeenTime(300));
-        }
+        return new SequentialAction(
+                robot.baseActions.SetSpecimenState(robot, SpecimenCommands.specimenStates.DEFAULT),
+                new SleepAction(0.1),
+                robot.baseActions.SetSpecimenState(robot, SpecimenCommands.specimenStates.PRIME)
+            );
     }
 
     public Action specimenGrab(Robot robot) {
-        return new specimenGrab(robot);
+        return new SequentialAction(
+                robot.baseActions.SetSpecimenState(robot, SpecimenCommands.specimenStates.CLOSE_CLAW),
+                new SleepAction(0.3)
+        );
     }
 
     public class liftOuttakeSlightly implements Action {
@@ -277,7 +186,7 @@ public class AutoActions extends Subsystem {
         }
     }
 
-        public Action retractActiveIntake(Robot robot) {
+    public Action retractActiveIntake(Robot robot) {
             return new retractActiveIntake(robot);
         }
 
@@ -358,11 +267,11 @@ public class AutoActions extends Subsystem {
                 initialized = true;
 
                 robot.intake.pitchState = Intake.PitchState.STOWED;
-                robot.intake.setIntakePower(-0.8);
+                robot.intake.setIntakePower(-0.6);
                 startTime = System.currentTimeMillis();
             }
 
-            return !(System.currentTimeMillis() - startTime >= 300);
+            return !(System.currentTimeMillis() - startTime >= 400);
         }
 
     }
@@ -400,6 +309,5 @@ public class AutoActions extends Subsystem {
     public Action ActiveIntakeUp(Robot robot) {
         return new ActiveIntakeUp(robot);
     }
-
 
 }

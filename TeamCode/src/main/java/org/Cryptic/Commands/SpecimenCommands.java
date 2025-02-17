@@ -59,20 +59,15 @@ public class SpecimenCommands extends Subsystem {
     public void specimenUpdate() {
         switch (specimenState) {
             case DEFAULT:
-                initTime();
                 robot.outtake.fullRetract();
                 specimenState = specimenStates.PRIME;
                 break;
             case PRIME:
-                if (hasBeenTime(100)) {
-                    robot.outtake.intakeSpecimenDefaultPosition();
-                    specimenState = specimenStates.CLOSE_CLAW;
-                    initTime();
-                }
+                robot.outtake.intakeSpecimenDefaultPosition();
+                specimenState = specimenStates.CLOSE_CLAW;
                 break;
             case CLOSE_CLAW:
                 robot.outtake.claw.closeCLaw();
-                initTime();
                 specimenState = specimenStates.POSITION_TO_SCORE;
                 break;
             case POSITION_TO_SCORE:
@@ -93,14 +88,10 @@ public class SpecimenCommands extends Subsystem {
                 robot.outtake.clawAngle -=15;
                 robot.outtake.fullRetract();
 
-                initTime();
                 break;
             case RESET:
-                if (hasBeenTime(250)) {
-                    initTime();
-                    robot.verticalSlides.retractSlides();
-                    specimenState = specimenStates.DEFAULT;
-                }
+                robot.verticalSlides.retractSlides();
+                specimenState = specimenStates.DEFAULT;
                 break;
         }
     }

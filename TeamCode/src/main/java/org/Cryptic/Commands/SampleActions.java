@@ -92,6 +92,7 @@ public class SampleActions extends Subsystem {
                 initialized = true;
                 robot.verticalSlides.slidesTarget = 500;
                 robot.outtake.fullExtend();
+                initTime();
             }
             robot.verticalSlides.update();
 
@@ -114,10 +115,11 @@ public class SampleActions extends Subsystem {
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
                 initialized = true;
+                initTime();
             }
             robot.outtake.defaultPos();
             robot.verticalSlides.retractSlides();
-            return false;
+            return !hasBeenTime(600);
         }
     }
 

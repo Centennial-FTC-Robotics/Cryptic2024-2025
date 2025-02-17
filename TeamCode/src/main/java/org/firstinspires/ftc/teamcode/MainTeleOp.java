@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystems.Intake;
+import org.Cryptic.util.Globals;
 
 @Config
 @TeleOp (name = "MainTeleOp")
@@ -76,6 +77,8 @@ public class MainTeleOp extends LinearOpMode {
                     -gamepad1.right_stick_x * slowMode
             ));
 
+            telemetry.addData("ALLIANCE COLOR", robot.intake.ALLIANCE_COLOR);
+
             packet.put("Color: ", robot.intake.getColor());
             packet.put("SPECIMEN STATE: ", robot.specimenCommands.getSpecimenState());
 
@@ -112,10 +115,6 @@ public class MainTeleOp extends LinearOpMode {
                 robot.outtake.outtakeSample();
             }
 
-            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                robot.intake.incTransferIntakeOuttakeState();
-            }
-
 
             // GAMEPAD 2
 
@@ -138,7 +137,8 @@ public class MainTeleOp extends LinearOpMode {
             //robot.intake.setPrimeIntake(bIntakeReader.getState());
 
             // Move Intake Rollers
-            double intakePower = intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.4);
+            double expelSpeed = 0.5;
+            double intakePower = intakePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - (intakePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*expelSpeed);
             if (robot.intake.inc < 5 && robot.intake.inc != 0) { // this is kinda retarded but whatever
                 robot.intake.pitchState = Intake.PitchState.TRANSFER;
             } else if (robot.intakeSlides.slidesMotor.getCurrentPosition() <= 100){
@@ -149,7 +149,12 @@ public class MainTeleOp extends LinearOpMode {
                 robot.intake.pitchState = Intake.PitchState.UP;
             }
 
-            robot.intake.setIntakePower(intakePower);
+            if (robot.intake.getColor() == Globals.SampleColor.UNKNOWN || robot.intake.getColor() == Globals.SampleColor.YELLOW || robot.intake.getColor() == robot.intake.ALLIANCE_COLOR) {
+                robot.intake.setIntakePower(intakePower);
+            } else {
+                long startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 500) robot.intake.setIntakePower(-expelSpeed);
+            }
 
             if(intakePad.wasJustPressed(GamepadKeys.Button.A)){
                 if(robot.outtake.intakeClawSampleState ==2){
@@ -167,6 +172,10 @@ public class MainTeleOp extends LinearOpMode {
                 robot.outtake.clawSpinRight();
             }
 
+            if(intakePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                robot.intake.incTransferIntakeOuttakeState();
+            }
+
             if (intakePad.wasJustPressed(GamepadKeys.Button.X)) {
                 if (robot.clawArm.clawOpened == true) {
                     robot.clawArm.closeCLaw();
@@ -176,6 +185,7 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             dashboard.sendTelemetryPacket(packet);
+            telemetry.update();
 
         }
     }

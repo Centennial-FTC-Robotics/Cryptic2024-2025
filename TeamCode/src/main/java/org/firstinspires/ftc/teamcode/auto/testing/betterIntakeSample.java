@@ -19,13 +19,13 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Autonomous
 public class betterIntakeSample extends LinearOpMode {
     public Action intakeSequence(Robot robot, int dis1, int dis2) {
-        robot.autoActions.extendActiveIntake2(robot,dis1);
-        robot.autoActions.ActiveIntakeRun(robot);
-        robot.autoActions.extendActiveIntake2(robot,dis2);
+        robot.specimenActions.extendActiveIntake2(robot,dis1);
+        robot.specimenActions.ActiveIntakeRun(robot);
+        robot.specimenActions.extendActiveIntake2(robot,dis2);
         sleep(700);
-        robot.autoActions.ActiveIntakeUp(robot);
+        robot.specimenActions.ActiveIntakeUp(robot);
         robot.sampleActions.transfer(robot);
-        robot.autoActions.retractActiveIntake(robot);
+        robot.specimenActions.retractActiveIntake(robot);
         robot.sampleActions.positionToScore(robot);
         return null;
     }
@@ -83,7 +83,7 @@ public class betterIntakeSample extends LinearOpMode {
                                 score,
                                 park
                         ),
-                        robot.autoActions.robotUpdate(robot)
+                        robot.specimenActions.robotUpdate(robot)
                 )
         );
     }

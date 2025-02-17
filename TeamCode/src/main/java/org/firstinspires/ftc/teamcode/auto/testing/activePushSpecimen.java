@@ -1,19 +1,15 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.testing;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.Cryptic.Commands.AutoActions;
 import org.Cryptic.Robot;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
@@ -34,76 +30,74 @@ public class activePushSpecimen extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         TrajectoryActionBuilder preload = drive.actionBuilder(initialPose)
-                .stopAndAdd(robot.autoActions.specimenScore(robot))
+                .stopAndAdd(robot.specimenActions.specimenScore(robot))
                 .splineToConstantHeading(new Vector2d(-8, rungY), Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenRelease(robot));
+                .stopAndAdd(robot.specimenActions.specimenRelease(robot));
 
         TrajectoryActionBuilder pushFirst = preload.endTrajectory().fresh()
+                .afterDisp(10, robot.specimenActions.extendActiveIntake2(robot, 500))
                 .setTangent(Math.toRadians(90))
-                .afterDisp(10, robot.autoActions.extendActiveIntake2(robot, 500))
                 .splineToLinearHeading(new Pose2d(-32+offset, 40, Math.toRadians(230)),Math.toRadians(215))
-                .stopAndAdd(robot.autoActions.lowerActiveIntake(robot))
+                .stopAndAdd(robot.specimenActions.lowerActiveIntake(robot))
                 .setTangent(Math.toRadians(20))
                 .splineToLinearHeading(new Pose2d(-32+offset, 44, Math.toRadians(150)),Math.toRadians(160))
-                .stopAndAdd(robot.autoActions.ActiveIntakeUp(robot));
+                .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot));
 
         TrajectoryActionBuilder pushSecond = pushFirst.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(-40+offset, 40), Math.toRadians(230))
-                .stopAndAdd(robot.autoActions.lowerActiveIntake(robot))
+                .stopAndAdd(robot.specimenActions.lowerActiveIntake(robot))
                 .setTangent(Math.toRadians(20))
                 .splineToLinearHeading(new Pose2d(-40+offset, 44, Math.toRadians(150)),Math.toRadians(160))
-                .stopAndAdd(robot.autoActions.ActiveIntakeUp(robot));
+                .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot));
 
         TrajectoryActionBuilder pushThird = pushSecond.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(-47+offset, 40), Math.toRadians(230))
-                .stopAndAdd(robot.autoActions.lowerActiveIntake(robot))
+                .stopAndAdd(robot.specimenActions.lowerActiveIntake(robot))
                 .setTangent(Math.toRadians(20))
                 .splineToLinearHeading(new Pose2d(-47+offset, 44, Math.toRadians(150)),Math.toRadians(160))
-                .stopAndAdd(robot.autoActions.ActiveIntakeUp(robot))
-                .stopAndAdd(robot.autoActions.retractActiveIntake(robot));
+                .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
+                .stopAndAdd(robot.specimenActions.retractActiveIntake(robot));
 
         TrajectoryActionBuilder scoreFirst = pushThird.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(-38, 58), Math.toRadians(270))
+                .stopAndAdd(robot.specimenActions.liftOuttakeSlightly(robot))
+                .afterDisp(10, robot.specimenActions.specimenScore(robot))
                 .setTangent(Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.liftOuttakeSlightly(robot))
-                .afterDisp(10, robot.autoActions.specimenScore(robot))
                 .splineToConstantHeading(new Vector2d(8,rungY), Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenRelease(robot));
+                .stopAndAdd(robot.specimenActions.specimenRelease(robot));
 
         TrajectoryActionBuilder scoreSecond = scoreFirst.endTrajectory().fresh()
+                .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .setTangent(Math.toRadians(90))
-                .afterDisp(10, robot.autoActions.specimenIntake(robot))
                 .splineToConstantHeading(new Vector2d(-38, 58),Math.toRadians(90))
+                .stopAndAdd(robot.specimenActions.specimenGrab(robot))
+                .stopAndAdd(robot.specimenActions.liftOuttakeSlightly(robot))
+                .afterDisp(10, robot.specimenActions.specimenScore(robot))
                 .setTangent(Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenGrab(robot))
-                .stopAndAdd(robot.autoActions.liftOuttakeSlightly(robot))
-                .afterDisp(10, robot.autoActions.specimenScore(robot))
                 .splineToConstantHeading(new Vector2d(4, rungY),Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenRelease(robot));
+                .stopAndAdd(robot.specimenActions.specimenRelease(robot));
 
         TrajectoryActionBuilder scoreThird = scoreSecond.endTrajectory().fresh()
+                .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .setTangent(Math.toRadians(90))
-                .afterDisp(10, robot.autoActions.specimenIntake(robot))
                 .splineToConstantHeading(new Vector2d(-38, 58),Math.toRadians(90))
+                .stopAndAdd(robot.specimenActions.specimenGrab(robot))
+                .stopAndAdd(robot.specimenActions.liftOuttakeSlightly(robot))
+                .afterDisp(10, robot.specimenActions.specimenScore(robot))
                 .setTangent(Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenGrab(robot))
-                .stopAndAdd(robot.autoActions.liftOuttakeSlightly(robot))
-                .afterDisp(10, robot.autoActions.specimenScore(robot))
                 .splineToConstantHeading(new Vector2d(0, rungY),Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenRelease(robot));
+                .stopAndAdd(robot.specimenActions.specimenRelease(robot));
 
         TrajectoryActionBuilder scoreFourth = scoreThird.endTrajectory().fresh()
+                .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .setTangent(Math.toRadians(90))
-                .afterDisp(10, robot.autoActions.specimenIntake(robot))
                 .splineToConstantHeading(new Vector2d(-38, 58),Math.toRadians(90))
+                .stopAndAdd(robot.specimenActions.specimenGrab(robot))
+                .stopAndAdd(robot.specimenActions.liftOuttakeSlightly(robot))
+                .afterDisp(10, robot.specimenActions.specimenScore(robot))
                 .setTangent(Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenGrab(robot))
-                .stopAndAdd(robot.autoActions.liftOuttakeSlightly(robot))
-                .afterDisp(10, robot.autoActions.specimenScore(robot))
                 .splineToConstantHeading(new Vector2d(-4, rungY),Math.toRadians(270))
-                .stopAndAdd(robot.autoActions.specimenRelease(robot));
-
-
+                .stopAndAdd(robot.specimenActions.specimenRelease(robot));
 
         waitForStart();
 
@@ -122,7 +116,7 @@ public class activePushSpecimen extends LinearOpMode {
                                 scoreFourth.build()
 
                         ),
-                        robot.autoActions.robotUpdate(robot)
+                        robot.specimenActions.robotUpdate(robot)
                 )
 
         );

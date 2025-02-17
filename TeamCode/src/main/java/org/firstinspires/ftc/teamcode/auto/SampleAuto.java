@@ -121,7 +121,7 @@ public class SampleAuto extends LinearOpMode {
                                 prepareToParkA,
                                 parkA
                                 ),
-                        robot.autoActions.robotUpdate(robot)
+                        robot.specimenActions.robotUpdate(robot)
                 )
         );
     }

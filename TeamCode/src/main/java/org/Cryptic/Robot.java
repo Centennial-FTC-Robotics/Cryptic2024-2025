@@ -1,6 +1,7 @@
 package org.Cryptic;
 
-import org.Cryptic.Commands.AutoActions;
+import org.Cryptic.Commands.BaseActions;
+import org.Cryptic.Commands.SpecimenActions;
 import org.Cryptic.Commands.SampleActions;
 import org.Cryptic.Commands.SpecimenCommands;
 import org.Cryptic.Subsystems.ClawArm;
@@ -23,7 +24,8 @@ public class Robot {
     public IMU imu = new IMU();
     public DrivetrainNoRR dtNoRR = new DrivetrainNoRR();
     public SpecimenCommands specimenCommands = new SpecimenCommands();
-    public AutoActions autoActions = new AutoActions();
+    public BaseActions baseActions = new BaseActions();
+    public SpecimenActions specimenActions = new SpecimenActions();
     public SampleActions sampleActions = new SampleActions();
 
     public Subsystem[] subsystems = new Subsystem[] {
@@ -37,7 +39,8 @@ public class Robot {
             intakeSlides,
             imu,
             specimenCommands,
-            autoActions,
+            baseActions,
+            specimenActions,
             sampleActions
     };
 

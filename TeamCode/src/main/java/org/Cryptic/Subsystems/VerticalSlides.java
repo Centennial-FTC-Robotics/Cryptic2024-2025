@@ -24,7 +24,7 @@ public class VerticalSlides extends Subsystem {
     public static double slideP = 0.008;
     public static double slideI = 0.0;
     public static double slideD = 0.0;
-    public static double slideF = 0.1;
+    public static double slideF = 0.2;
     public static int errorThreshold = 5;
     public final int intakeArmThreshold = 900;
     public boolean canOuttake;

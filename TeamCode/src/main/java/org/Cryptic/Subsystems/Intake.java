@@ -34,11 +34,12 @@ public class Intake extends Subsystem {
     public static double pitchUp = 0.8;
     public static double pitchStowed = 0.7;
     public static double pitchTransfer = .65;
+    public static double pitchPush = 0.62;
 
     private boolean isPrimed;
 
     public enum PitchState {
-        DOWN, UP, STOWED, TRANSFER
+        DOWN, UP, STOWED, TRANSFER, PUSH
     }
 
     public Servo leftPitchServo;
@@ -61,6 +62,8 @@ public class Intake extends Subsystem {
 
     public static PitchState pitchState = PitchState.STOWED;
     public static boolean primed = false;
+
+    public static Globals.SampleColor ALLIANCE_COLOR = Globals.SampleColor.UNKNOWN;
 
     @Override
     public void init(LinearOpMode opmode) throws InterruptedException {
@@ -119,6 +122,9 @@ public class Intake extends Subsystem {
                 leftPitchServo.setPosition(pitchTransfer);
                 rightPitchServo.setPosition(1-pitchTransfer);
                 break;
+            case PUSH:
+                leftPitchServo.setPosition(pitchPush);
+                rightPitchServo.setPosition(1-pitchPush);
         }
     }
 

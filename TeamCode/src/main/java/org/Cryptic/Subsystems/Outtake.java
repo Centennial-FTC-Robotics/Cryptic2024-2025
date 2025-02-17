@@ -115,7 +115,6 @@ public class Outtake extends Subsystem {
             fullRetract();
             claw.closeCLaw();
 
-
         }
 
         else if(outtakeSampleState == 1){

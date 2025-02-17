@@ -1,5 +1,6 @@
 package com.example.meepmeeptesting;
 
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.CompositeVelConstraint;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -19,7 +20,7 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 18)
+                .setConstraints(50, 30, Math.toRadians(180), Math.toRadians(180), 18)
                 .build();
 
         double t = 23.5;
@@ -59,33 +60,47 @@ public class MeepMeepTesting {
                 .build());
         */
 
+        //VelConstraint slowVel = new TranslationalVelConstraint(27);
+        //AccelConstraint slowAccel = new ProfileAccelConstraint(-30, 30);
+
         double offset = 5.0;
+        double observationY = 59.3;
         // Active Intake 5 Specimen Auto
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*-0.5-2.75), (t*2.5 + 2.75), Math.toRadians(270)))
                 .waitSeconds(1)
-                // DRIVE FORWARDS
-                .strafeToConstantHeading(new Vector2d(-7, 50))
-                .splineToConstantHeading(new Vector2d(-4, rungY), Math.toRadians(270))
-
-                // Go back to clear outtake from rung
-                .lineToY(40)
-                .strafeToLinearHeading(new Vector2d(-4, 45), Math.toRadians(195))
-                .strafeToLinearHeading(new Vector2d(-32+offset, 40), Math.toRadians(210))
+                .strafeToConstantHeading(new Vector2d(1, rungY-4))
+                .strafeToLinearHeading(new Vector2d(-33+offset, 40), Math.toRadians(210))
                 .strafeToLinearHeading(new Vector2d(-32+offset, 44), Math.toRadians(135))
                 .strafeToLinearHeading(new Vector2d(-32+offset, 40), Math.toRadians(205))
                 .strafeToLinearHeading(new Vector2d(-40+offset, 40), Math.toRadians(210))
                 .strafeToLinearHeading(new Vector2d(-40+offset, 44), Math.toRadians(135))
+                //.splineToLinearHeading(new Pose2d(-38, observationY-4, Math.toRadians(270)), Math.toRadians(90))
                 .strafeToLinearHeading(new Vector2d(-40+offset, 40), Math.toRadians(203))
-                .strafeToLinearHeading(new Vector2d(-47+offset, 40), Math.toRadians(207))
-                .strafeToLinearHeading(new Vector2d(-44+offset, 44), Math.toRadians(120))
-                .strafeToLinearHeading(new Vector2d(-38, 58), Math.toRadians(270))
-                //.strafeToConstantHeading(new Vector2d(-38, 58))
-                .strafeToConstantHeading(new Vector2d(10, rungY))
-                .strafeToConstantHeading(new Vector2d(-38, 58))
+                .strafeToLinearHeading(new Vector2d(-48+offset, 40), Math.toRadians(205))
+                .strafeToLinearHeading(new Vector2d(-44+offset, 44), Math.toRadians(130))
+                .strafeToLinearHeading(new Vector2d(-38, observationY - 4), Math.toRadians(270))
+                .strafeToConstantHeading(new Vector2d(-38, observationY))
+                .strafeToConstantHeading(new Vector2d(2, rungY))
+                .setReversed(true)
+                //.strafeToConstantHeading(new Vector2d(-38, observationY))
+                .strafeToLinearHeading(new Vector2d(-25, 50), Math.toRadians(150))
+
+
+                // NEW PUSH IDEA
+                //.setReversed(true)
+                //.splineToLinearHeading(new Pose2d(-38, 36, Math.toRadians(90)), Math.toRadians(270))
+                //.splineToConstantHeading(new Vector2d(-38, 18), Math.toRadians(270))
+                //.splineToConstantHeading(new Vector2d(-47, 12), Math.toRadians(90))
+                //.waitSeconds(1)
+                //.strafeToConstantHeading(new Vector2d(-57, 12))
+                //.waitSeconds(1)
+                //.strafeToConstantHeading(new Vector2d(-62, 12))
+                //.setReversed(false)
+                //.strafeToConstantHeading(new Vector2d(-62, 45))
+                //.strafeToConstantHeading(new Vector2d(-50, 45))
 
 
                 //.strafeToConstantHeading(new Vector2d(-5, 50))
-                //.splineToConstantHeading(new Vector2d(2, rungY), Math.toRadians(270))
 
                 /*
                 // PUSH SAMPLES
