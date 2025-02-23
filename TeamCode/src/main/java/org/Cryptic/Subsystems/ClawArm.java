@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -21,12 +22,14 @@ public class ClawArm extends Subsystem{
     public Servo leftArmServo;
     public Servo rightArmServo;
 
+    public DigitalChannel clawLimitSwitch;
+
 
     public static double gripperPos = 0.0;
 
     public boolean clawOpened;
-    public final double clawCloseValue = .85;
-    public final double clawOpenValue = 0.6;
+    public final double clawCloseValue = .8;
+    public final double clawOpenValue = 0.65;
 
     private LinearOpMode opmode;
 
@@ -39,6 +42,9 @@ public class ClawArm extends Subsystem{
         leftClawServo = opmode.hardwareMap.get(Servo.class, "rightClawServo");
         leftArmServo = opmode.hardwareMap.get(Servo.class, "leftArmServo");
         rightArmServo = opmode.hardwareMap.get(Servo.class, "rightArmServo");
+
+        clawLimitSwitch = opmode.hardwareMap.get(DigitalChannel.class, "clawLimitSwitch");
+        clawLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         /*
         setClawPos(180,0);

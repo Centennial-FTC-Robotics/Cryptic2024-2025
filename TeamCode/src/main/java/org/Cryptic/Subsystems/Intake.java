@@ -59,7 +59,6 @@ public class Intake extends Subsystem {
         MOVE_OUTTAKE
     }
 
-
     public static PitchState pitchState = PitchState.STOWED;
     public static boolean primed = false;
 
@@ -81,8 +80,10 @@ public class Intake extends Subsystem {
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        setIntakePitch(PitchState.STOWED);
-        setPrimeIntake(false);
+        pitchState = PitchState.STOWED;
+        primed = false;
+        update();
+
         setIntakePower(0);
     }
     public Globals.SampleColor getColor() {
@@ -125,6 +126,7 @@ public class Intake extends Subsystem {
             case PUSH:
                 leftPitchServo.setPosition(pitchPush);
                 rightPitchServo.setPosition(1-pitchPush);
+                break;
         }
     }
 
@@ -168,7 +170,7 @@ public class Intake extends Subsystem {
                 primed = true;
                 robot.outtake.gripperAngle = 0.6;
                 robot.outtake.clawAngle = 90;
-                robot.outtake.clawYaw = -2;
+                robot.outtake.clawYaw = 2;
                 robot.outtake.armAngle = 137;
 
                 robot.verticalSlides.retractSlides();
@@ -212,33 +214,6 @@ public class Intake extends Subsystem {
             }
         }
     }
-    /*
-    public class IntakeSlidesUpdate implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            update();
-            return true;
-        }
-    }
-
-    public class ExtendIntakeToPosition implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setIntakePitch(PitchState.DOWN);
-            setSlidesTarget(610);
-            return !areSlidesFinished();
-        }
-    }
-
-    public class RetractIntake implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setSlidesTarget(20);
-            setIntakePitch(PitchState.STOWED);
-            return !areSlidesFinished();
-        }
-    }
-     */
 
 }
 

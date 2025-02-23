@@ -100,7 +100,7 @@ public class SpecimenActive extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-33+offset, 40), Math.toRadians(210))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 // Strafe to Observation zone
-                .strafeToLinearHeading(new Vector2d(-32+offset, 44), Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(-32+offset, 44), Math.toRadians(145))
                 // Expel sample
                 .stopAndAdd(robot.specimenActions.ActiveIntakeExpel(robot))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
@@ -110,7 +110,7 @@ public class SpecimenActive extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-41+offset, 40), Math.toRadians(205))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 // Strafe to Observation zone
-                .strafeToLinearHeading(new Vector2d(-40+offset, 44), Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(-40+offset, 44), Math.toRadians(145))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeExpel(robot))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 // Strafe to third sample
@@ -118,7 +118,7 @@ public class SpecimenActive extends LinearOpMode {
                 .stopAndAdd(robot.specimenActions.ActiveIntakeRun(robot))
                 .strafeToLinearHeading(new Vector2d(-48+offset, 40), Math.toRadians(205))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
-                .strafeToLinearHeading(new Vector2d(-44+offset, 44), Math.toRadians(130))
+                .strafeToLinearHeading(new Vector2d(-44+offset, 44), Math.toRadians(140))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeExpel(robot))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 .stopAndAdd(robot.specimenActions.retractActiveIntake(robot));
@@ -217,7 +217,7 @@ public class SpecimenActive extends LinearOpMode {
         robot.intake.ALLIANCE_COLOR = Globals.SampleColor.UNKNOWN;
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addData("CURRENT ALLIANCE COLOR", robot.intake.ALLIANCE_COLOR);
-            telemetry.addLine("PRESS B ON GAMEPAD1 TO CHANGE ALLIANCE COLOR");
+            telemetry.addLine("PRESS B (CIRCLE) ON GAMEPAD1 TO CHANGE ALLIANCE COLOR");
             telemetry.update();
             if (drivePad.wasJustPressed(GamepadKeys.Button.B)) {
                 if (robot.intake.ALLIANCE_COLOR == Globals.SampleColor.UNKNOWN) {

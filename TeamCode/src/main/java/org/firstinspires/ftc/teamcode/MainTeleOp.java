@@ -149,11 +149,12 @@ public class MainTeleOp extends LinearOpMode {
                 robot.intake.pitchState = Intake.PitchState.UP;
             }
 
-            if (robot.intake.getColor() == Globals.SampleColor.UNKNOWN || robot.intake.getColor() == Globals.SampleColor.YELLOW || robot.intake.getColor() == robot.intake.ALLIANCE_COLOR) {
+            if (robot.intake.ALLIANCE_COLOR == Globals.SampleColor.UNKNOWN || robot.intake.getColor() == Globals.SampleColor.UNKNOWN || robot.intake.getColor() == Globals.SampleColor.YELLOW || robot.intake.getColor() == robot.intake.ALLIANCE_COLOR) {
                 robot.intake.setIntakePower(intakePower);
             } else {
                 long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 500) robot.intake.setIntakePower(-expelSpeed);
+                while (System.currentTimeMillis() - startTime < 500)
+                    robot.intake.setIntakePower(-expelSpeed);
             }
 
             if(intakePad.wasJustPressed(GamepadKeys.Button.A)){
