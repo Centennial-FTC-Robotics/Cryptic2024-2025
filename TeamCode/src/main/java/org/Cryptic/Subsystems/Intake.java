@@ -30,11 +30,11 @@ public class Intake extends Subsystem {
 
     public static double maxSlideSpeed;
 
-    public static double pitchDown = 0.57;
-    public static double pitchUp = 0.8;
-    public static double pitchStowed = 0.7;
-    public static double pitchTransfer = .65;
-    public static double pitchPush = 0.62;
+    public static double pitchDown = 0.32;
+    public static double pitchUp = 0.45;
+    public static double pitchStowed = 0.32;
+    public static double pitchTransfer = .40;
+    public static double pitchPush = 0.32;
 
     private boolean isPrimed;
 

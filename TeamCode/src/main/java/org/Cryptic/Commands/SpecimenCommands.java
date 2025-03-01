@@ -71,16 +71,21 @@ public class SpecimenCommands extends Subsystem {
                 specimenState = specimenStates.POSITION_TO_SCORE;
                 break;
             case POSITION_TO_SCORE:
-                //if(hasBeenTime(400)) {
-                robot.outtake.armAngle = 121;
-                robot.outtake.clawAngle = 75;
-                robot.outtake.clawYaw = 0;
-                robot.outtake.fullExtend();
-                robot.outtake.claw.closeCLaw();
-                robot.verticalSlides.slidesTarget = 1345;
+                if(robot.clawArm.clawLimitSwitch.getState() == false){
+                    specimenState = specimenStates.PRIME;
+                    robot.outtake.claw.openClaw();
+                } else {
+                    //if(hasBeenTime(400)) {
+                    robot.outtake.armAngle = 121;
+                    robot.outtake.clawAngle = 75;
+                    robot.outtake.clawYaw = 0;
+                    robot.outtake.fullExtend();
+                    robot.outtake.claw.closeCLaw();
+                    robot.verticalSlides.slidesTarget = 1345;
 
-                specimenState = specimenStates.RELEASE_SPECIMEN;
-                //}
+                    specimenState = specimenStates.RELEASE_SPECIMEN;
+                    //}
+                }
                 break;
             case RELEASE_SPECIMEN:
                 specimenState = specimenStates.RESET;

@@ -165,6 +165,7 @@ public class Outtake extends Subsystem {
         if(intakeClawSampleState==0){
 
             clawAngle = 90;
+            clawYaw = 0;
             fullExtend();
             robot.clawArm.closeCLaw();
             robot.verticalSlides.retractSlides();
@@ -175,7 +176,9 @@ public class Outtake extends Subsystem {
             initTime();
         }
         if(intakeClawSampleState==2){
-            clawAngle = 20;
+            clawAngle = 15;
+            armAngle=141;
+            clawYaw = 0;
         }
 
         else if(intakeClawSampleState == 3){
@@ -199,21 +202,26 @@ public class Outtake extends Subsystem {
 
         if(intakeClawSampleSequenceState ==0 && currentActionSequence.equals("Intake Claw Sample") ){
             robot.clawArm.openClaw();
-            armAngle  +=12;
-            clawAngle -=19;
+            armAngle  =151+12;
+            clawAngle =90-19;
             intakeClawSampleSequenceState +=1;
             initTime();
         }
-        else if(intakeClawSampleSequenceState ==1 && hasBeenTime(250)){
+        else if(intakeClawSampleSequenceState ==1 && hasBeenTime(150)){
             robot.clawArm.closeCLaw();
             intakeClawSampleSequenceState +=1;
             initTime();
         }
 
-        else if(intakeClawSampleSequenceState ==2 && hasBeenTime(400)){
-            armAngle-=8;
-            clawAngle+=15;
-            clawYaw = 0;
+        else if(intakeClawSampleSequenceState ==2 && hasBeenTime(300)){
+            armAngle=151;
+            clawAngle=90;
+
+            if(robot.clawArm.clawLimitSwitch.getState()){
+                intakeClawSample();
+
+            }
+
             intakeClawSampleSequenceState+=1;
         }
         else if(intakeClawSampleSequenceState == 3){
