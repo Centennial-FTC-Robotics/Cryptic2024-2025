@@ -81,7 +81,21 @@ public class intakeSampleAuto extends LinearOpMode {
                 .stopAndAdd(robot.sampleActions.dropSample(robot))
                 .stopAndAdd(robot.sampleActions.reset(robot))
 
-                .strafeToSplineHeading(new Vector2d(50, 10), Math.toRadians(180));
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(25,10,Math.toRadians(180)),Math.toRadians(180))
+                .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot, 250))
+                .stopAndAdd(robot.specimenActions.ActiveIntakeRun(robot))
+                .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot, 600))
+                .waitSeconds(0.8)
+                .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
+                .stopAndAdd(robot.sampleActions.transfer(robot))
+                .stopAndAdd(robot.specimenActions.retractActiveIntake(robot))
+
+                .stopAndAdd(robot.sampleActions.positionToScore(robot))
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(scoreX, scoreY, Math.toRadians(225)), Math.toRadians(45))
+                .stopAndAdd(robot.sampleActions.dropSample(robot))
+                .stopAndAdd(robot.sampleActions.reset(robot));
 
 
         Action driveToScoreA = driveToScore.build();
