@@ -65,8 +65,8 @@ public class Intake extends Subsystem {
     public enum States {
         PRIME_INTAKE,
         PRIME_OUTTAKE,
-        MOVE_INTAKE,
         POSITION_DOWN,
+        MOVE_INTAKE,
         GRAB_SAMPLE,
         LIFT,
         MOVE_OUTTAKE
@@ -157,7 +157,7 @@ public class Intake extends Subsystem {
     public void setPrimeIntake(boolean primed) {
         // TODO: Move servo to set up the intake for transfer to outtake
         if (primed) {
-            transferServo.setPosition(0.45);
+            transferServo.setPosition(0.35);
         } else {
             transferServo.setPosition(0.8);
         }
@@ -186,32 +186,33 @@ public class Intake extends Subsystem {
 
 
     public static States transferState = null;
-    public void transferIntakeOuttake () {
+    public void transferUpdate () {
         switch (transferState) {
             case PRIME_INTAKE:
                 pitchState = PitchState.TRANSFER;
                 primed = false;
                 robot.intakeSlides.setSlidesTarget(270);
+                robot.outtake.clawYaw = 2;
+
                 break;
             case PRIME_OUTTAKE:
                 robot.outtake.fullRetract();
                 primed = true;
                 robot.outtake.gripperAngle = 0.6;
                 robot.outtake.clawAngle = 90;
-                robot.outtake.clawYaw = 2;
-                robot.outtake.armAngle = 137;
-
+                robot.outtake.armAngle = 120;
 
                 robot.verticalSlides.retractSlides();
                 break;
-            case MOVE_INTAKE:
-                robot.outtake.armAngle=148;
-                break;
             case POSITION_DOWN:
-
-
-                robot.intakeSlides.setSlidesTarget(225);
+                robot.outtake.armAngle=130;
                 robot.outtake.clawAngle = 85;
+                break;
+            case MOVE_INTAKE:
+                while (!robot.clawArm.clawLimitSwitch.getState()) {
+                    robot.intakeSlides.slidesMotor.setPower(-0.5);
+                }
+                robot.intakeSlides.setSlidesTarget(robot.intakeSlides.slidesMotor.getCurrentPosition());
                 break;
             case GRAB_SAMPLE:
                 robot.clawArm.closeCLaw();
@@ -228,7 +229,6 @@ public class Intake extends Subsystem {
         }
     }
 
-
     public static int inc = 0;
     public void incTransferIntakeOuttakeState () {
         // Pretty jank but it converts a gamepad press into a State
@@ -241,10 +241,8 @@ public class Intake extends Subsystem {
             count += 1;
             if (inc == count) {
                 transferState = i;
-                transferIntakeOuttake();
+                transferUpdate();
             }
         }
     }
-
-
 }

@@ -43,6 +43,33 @@ public class BaseActions extends Subsystem {
         return new SetSpecimenState(robot, specimenState);
     }
 
+    public class SetTransferState implements Action {
+        private boolean initialized = false;
+        private Robot robot = new Robot();
+        private long startTime = System.currentTimeMillis();
+        private Intake.States transferState = null;
+
+        public SetTransferState(Robot robot, Intake.States transferState) {
+            this.robot = robot;
+            this.transferState = transferState;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+                robot.intake.transferState = this.transferState;
+                robot.intake.transferUpdate();
+                startTime = System.currentTimeMillis();
+            }
+
+            return false;
+        }
+    }
+    public Action SetTransferState (Robot robot, Intake.States transferState) {
+        return new SetTransferState(robot, transferState);
+    }
+
     public class SetIntakePitch implements Action {
         private boolean initialized = false;
         private Robot robot = new Robot();

@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystem;
+import org.Cryptic.Subsystems.Intake;
 
 public class SampleActions extends Subsystem {
 
@@ -237,6 +240,7 @@ public class SampleActions extends Subsystem {
         return new rotateClaw(robot, angle);
     }
 
+    /*
     public class transfer implements Action {
 
         private boolean initialized = false;
@@ -265,8 +269,25 @@ public class SampleActions extends Subsystem {
         }
 
     }
+     */
+
     public Action transfer(Robot robot) {
-        return new transfer(robot);
+        return new SequentialAction(
+            robot.baseActions.SetTransferState(robot, Intake.States.PRIME_INTAKE),
+            new SleepAction(0.2),
+            robot.baseActions.SetTransferState(robot, Intake.States.PRIME_OUTTAKE),
+            new SleepAction(0.2),
+            robot.baseActions.SetTransferState(robot, Intake.States.POSITION_DOWN),
+            new SleepAction(0.2),
+            robot.baseActions.SetTransferState(robot, Intake.States.MOVE_INTAKE),
+            new SleepAction(0.2),
+            robot.baseActions.SetTransferState(robot, Intake.States.GRAB_SAMPLE),
+            new SleepAction(0.2),
+            robot.baseActions.SetTransferState(robot, Intake.States.LIFT),
+            new SleepAction(0.2),
+            robot.baseActions.SetTransferState(robot, Intake.States.MOVE_OUTTAKE),
+            new SleepAction(0.2)
+        );
     }
 
 }
