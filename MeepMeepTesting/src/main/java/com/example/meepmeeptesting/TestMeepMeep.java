@@ -60,6 +60,7 @@ public class TestMeepMeep {
 
 
         // Active Intake 5 Specimen Auto
+        /*
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*-0.5-2.75), (t*2.5 + 2.75), Math.toRadians(270)))
                 //22.38 seconds
                         .waitSeconds(1)
@@ -105,10 +106,12 @@ public class TestMeepMeep {
 
                         .build());
 
+         */
 
 
 
-        /*
+
+
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d((t*1.5-2.75), (t*2.5 + 2.75), Math.toRadians(180)))
                 //9.74 seconds
                 .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
@@ -120,9 +123,11 @@ public class TestMeepMeep {
                 .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(25,10,Math.toRadians(180)),Math.toRadians(180))
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(scoreX, scoreY, Math.toRadians(225)), Math.toRadians(45))
                 .build());
 
-         */
+
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
