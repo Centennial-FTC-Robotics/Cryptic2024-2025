@@ -1,8 +1,11 @@
 package org.Cryptic.Subsystems;
 
+
 import android.app.Notification;
 
+
 import androidx.annotation.NonNull;
+
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -16,19 +19,25 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+
 import org.Cryptic.Subsystem;
 import org.Cryptic.util.Globals;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+
 import kotlin.OverloadResolutionByLambdaReturnType;
+
 
 @Config
 public class Intake extends Subsystem {
 
+
     public static double slidesTarget;
 
+
     public static double maxSlideSpeed;
+
 
     public static double pitchDown = 0.32;
     public static double pitchUp = 0.45;
@@ -36,11 +45,14 @@ public class Intake extends Subsystem {
     public static double pitchTransfer = .40;
     public static double pitchPush = 0.32;
 
+
     private boolean isPrimed;
+
 
     public enum PitchState {
         DOWN, UP, STOWED, TRANSFER, PUSH
     }
+
 
     public Servo leftPitchServo;
     public Servo rightPitchServo;
@@ -48,6 +60,7 @@ public class Intake extends Subsystem {
     public DcMotorEx intakeMotor;
     public ColorSensor color;
     public Servo LEDs;
+
 
     public enum States {
         PRIME_INTAKE,
@@ -59,30 +72,39 @@ public class Intake extends Subsystem {
         MOVE_OUTTAKE
     }
 
+
     public static PitchState pitchState = PitchState.STOWED;
     public static boolean primed = false;
 
+
     public static Globals.SampleColor ALLIANCE_COLOR = Globals.SampleColor.UNKNOWN;
+
 
     @Override
     public void init(LinearOpMode opmode) throws InterruptedException {
         // TODO: Initialize all components
         // TODO: Wait a second for servos to initialize
 
+
         color = opmode.hardwareMap.get(ColorSensor.class, "color");
+
 
         intakeMotor = opmode.hardwareMap.get(DcMotorEx.class, "intakeMotor");
         transferServo = opmode.hardwareMap.get(Servo.class, "transferServo");
         leftPitchServo = opmode.hardwareMap.get(Servo.class, "leftPitchServo");
         rightPitchServo = opmode.hardwareMap.get(Servo.class, "rightPitchServo");
 
+
         LEDs = opmode.hardwareMap.get(Servo.class, "leds");
 
+
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         pitchState = PitchState.STOWED;
         primed = false;
         update();
+
 
         setIntakePower(0);
     }
@@ -103,6 +125,7 @@ public class Intake extends Subsystem {
             return Globals.SampleColor.UNKNOWN;
         }
     }
+
 
     public void setIntakePitch(PitchState cool) {
         // TODO: Move the active intake servos based off pitch state
@@ -130,6 +153,7 @@ public class Intake extends Subsystem {
         }
     }
 
+
     public void setPrimeIntake(boolean primed) {
         // TODO: Move servo to set up the intake for transfer to outtake
         if (primed) {
@@ -140,6 +164,7 @@ public class Intake extends Subsystem {
         isPrimed = primed;
     }
 
+
     public void setIntakePower(double power) {
         intakeMotor.setPower(power);
         if(power>.1){
@@ -148,14 +173,17 @@ public class Intake extends Subsystem {
         }
     }
 
+
     public boolean getPrimeIntake(){
         return isPrimed;
     }
+
 
     public void update() {
         setIntakePitch(pitchState);
         setPrimeIntake(primed);
     }
+
 
     public static States transferState = null;
     public void transferIntakeOuttake () {
@@ -173,12 +201,14 @@ public class Intake extends Subsystem {
                 robot.outtake.clawYaw = 2;
                 robot.outtake.armAngle = 137;
 
+
                 robot.verticalSlides.retractSlides();
                 break;
             case MOVE_INTAKE:
                 robot.outtake.armAngle=148;
                 break;
             case POSITION_DOWN:
+
 
                 robot.intakeSlides.setSlidesTarget(225);
                 robot.outtake.clawAngle = 85;
@@ -198,6 +228,7 @@ public class Intake extends Subsystem {
         }
     }
 
+
     public static int inc = 0;
     public void incTransferIntakeOuttakeState () {
         // Pretty jank but it converts a gamepad press into a State
@@ -215,5 +246,5 @@ public class Intake extends Subsystem {
         }
     }
 
-}
 
+}

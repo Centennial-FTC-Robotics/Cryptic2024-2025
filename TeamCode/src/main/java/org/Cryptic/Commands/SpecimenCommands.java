@@ -1,23 +1,29 @@
 package org.Cryptic.Commands;
 
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystem;
 import org.Cryptic.Subsystems.Outtake;
 import org.Cryptic.util.Globals;
 
+
 @Config
 public class SpecimenCommands extends Subsystem {
 
+
     private long startTime;
+
 
     public enum RobotActions {
         IDLE,
         INTAKE_SPECIMEN,
         SCORE_SPECIMEN
     }
+
 
     public enum specimenStates {
         DEFAULT,
@@ -28,13 +34,16 @@ public class SpecimenCommands extends Subsystem {
         RESET
     }
 
-    specimenStates specimenState;
+
+    public specimenStates specimenState;
     RobotActions currentAction;
+
 
     public void init(LinearOpMode opmode) throws InterruptedException {
         specimenState = specimenStates.DEFAULT;
         currentAction = RobotActions.INTAKE_SPECIMEN;
     }
+
 
     private void initTime(){
         startTime = System.currentTimeMillis();
@@ -43,17 +52,22 @@ public class SpecimenCommands extends Subsystem {
         return System.currentTimeMillis() - startTime >= mili;
     }
 
+
     public void setSpecimenState (specimenStates cool) {
         specimenState = cool;
     }
+
 
     public specimenStates getSpecimenState () {
         return specimenState;
     }
 
+
     public RobotActions getCurrentAction () {
         return currentAction;
     }
+
+
 
 
     public void specimenUpdate() {
@@ -71,10 +85,7 @@ public class SpecimenCommands extends Subsystem {
                 specimenState = specimenStates.POSITION_TO_SCORE;
                 break;
             case POSITION_TO_SCORE:
-                if(robot.clawArm.clawLimitSwitch.getState() == false){
-                    specimenState = specimenStates.PRIME;
-                    robot.outtake.claw.openClaw();
-                } else {
+
                     //if(hasBeenTime(400)) {
                     robot.outtake.armAngle = 121;
                     robot.outtake.clawAngle = 75;
@@ -83,15 +94,17 @@ public class SpecimenCommands extends Subsystem {
                     robot.outtake.claw.closeCLaw();
                     robot.verticalSlides.slidesTarget = 1345;
 
+
                     specimenState = specimenStates.RELEASE_SPECIMEN;
                     //}
-                }
+
                 break;
             case RELEASE_SPECIMEN:
                 specimenState = specimenStates.RESET;
                 robot.outtake.claw.openClaw();
                 robot.outtake.clawAngle -=15;
                 robot.outtake.fullRetract();
+
 
                 break;
             case RESET:
@@ -103,24 +116,29 @@ public class SpecimenCommands extends Subsystem {
 }
 
 
-            /*
-        if(specimenSequence==0) {
-            intakeSpecimenDefaultPosition();
-        }
 
-        else if(specimenSequence == 1){
-            currentActionSequence = "Intake Specimen";
-        }
-        else if(specimenSequence == 2){
-            currentActionSequence = "Outtake Specimen";
-        }
 
-        specimenSequence +=1;
+           /*
+       if(specimenSequence==0) {
+           intakeSpecimenDefaultPosition();
+       }
 
-        if(specimenSequence>3){
-            specimenSequence = 0;
-            defaultPos();
-            robot.verticalSlides.retractSlides();
-            specimenState = specimenStates.DEFAULT;
-        }
-        */
+
+       else if(specimenSequence == 1){
+           currentActionSequence = "Intake Specimen";
+       }
+       else if(specimenSequence == 2){
+           currentActionSequence = "Outtake Specimen";
+       }
+
+
+       specimenSequence +=1;
+
+
+       if(specimenSequence>3){
+           specimenSequence = 0;
+           defaultPos();
+           robot.verticalSlides.retractSlides();
+           specimenState = specimenStates.DEFAULT;
+       }
+       */

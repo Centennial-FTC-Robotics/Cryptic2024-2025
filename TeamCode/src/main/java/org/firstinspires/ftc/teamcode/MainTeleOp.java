@@ -16,6 +16,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
+import org.Cryptic.Commands.SpecimenCommands;
 import org.Cryptic.Robot;
 import org.Cryptic.Subsystems.Intake;
 import org.Cryptic.util.Globals;
@@ -106,9 +107,12 @@ public class MainTeleOp extends LinearOpMode {
             if (intakePad.wasJustPressed(GamepadKeys.Button.Y)) {
                 robot.specimenCommands.specimenUpdate();
             }
+            if(intakePad.wasJustReleased(GamepadKeys.Button.Y) && robot.clawArm.clawLimitSwitch.getState()){
 
-            if(intakePad.wasJustPressed(GamepadKeys.Button.B)){
-                robot.outtake.intakeClawSample();
+
+                robot.specimenCommands.specimenState = SpecimenCommands.specimenStates.POSITION_TO_SCORE;
+                robot.specimenCommands.specimenUpdate();
+
             }
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
@@ -157,11 +161,19 @@ public class MainTeleOp extends LinearOpMode {
                     robot.intake.setIntakePower(-expelSpeed);
             }
 
+            if(intakePad.wasJustPressed(GamepadKeys.Button.B)){
+                robot.outtake.intakeClawSample();
+            }
+
             if(intakePad.wasJustPressed(GamepadKeys.Button.A)){
                 if(robot.outtake.intakeClawSampleState ==2){
                     robot.outtake.currentActionSequence=  "Intake Claw Sample";
                     robot.outtake.intakeClawSampleSequenceState = 0;
                 }
+            }
+            if(intakePad.wasJustReleased(GamepadKeys.Button.A) && robot.clawArm.clawLimitSwitch.getState()){
+                robot.outtake.intakeClawSampleState=3;
+                robot.outtake.intakeClawSample();
             }
             // Spin Claw
             if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {

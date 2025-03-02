@@ -17,8 +17,8 @@ import org.Cryptic.Subsystem;
 public class Outtake extends Subsystem {
     public Servo extendServo;
 
-    public static final double maxExtend = .25;
-    public static final double minExtend = .96;
+    public static final double maxExtend = .10;
+    public static final double minExtend = 1;
 
     public boolean extendValue;
 
@@ -48,7 +48,7 @@ public class Outtake extends Subsystem {
         this.opmode = opmode;
 
         extendServo = opmode.hardwareMap.get(Servo.class, "extendServo");
-
+        extendServo.setDirection(Servo.Direction.REVERSE);
         robot.clawArm.clawServo.setPosition(robot.clawArm.clawCloseValue);
 
         defaultPos();
@@ -71,25 +71,32 @@ public class Outtake extends Subsystem {
 
     public void setExtend(int extend) {
         double val = Range.scale(extend,0.0,100.0,maxExtend,minExtend);
-        extendServo.setPosition(Range.clip(val, minExtend,maxExtend));
+        extendServo.setPosition(Range.clip(val, maxExtend,minExtend));
     }
 
     public void fullExtend(){
         setExtend(100);
     }
 
+
     public void fullRetract(){
         setExtend(0);
     }
 
+
     public void defaultPos(){
+
 
         armAngle = 90;
         clawAngle = 120;
         clawYaw = 0;
         fullRetract();
 
+
     }
+
+
+
 
 
 
@@ -98,15 +105,20 @@ public class Outtake extends Subsystem {
         clawAngle = 0;
 
 
+
+
         clawYaw = 0;
         claw.openClaw();
         //fullExtend();
         robot.verticalSlides.retractSlides();
 
+
     }
+
 
     public int outtakeSampleState = 0;
     public void outtakeSample(){
+
 
         if(outtakeSampleState == 0){
             armAngle = 50; //30
@@ -115,11 +127,14 @@ public class Outtake extends Subsystem {
             fullRetract();
             claw.closeCLaw();
 
+
         }
+
 
         else if(outtakeSampleState == 1){
             currentActionSequence = "Outtake Sample";
         }
+
 
         else if(outtakeSampleState >= 2){
             currentActionSequence = "";
@@ -128,41 +143,59 @@ public class Outtake extends Subsystem {
 
 
 
+
+
+
         }
+
+
 
 
         outtakeSampleState +=1;
 
 
+
+
     }
+
 
     public int intakeClawSampleState = 0;
 
+
     public void clawSpinRight(){
 
+
         clawYaw-=1;
+
 
         if(clawYaw<-2){
             clawYaw = -2;
         }
 
+
     }
     public void clawSpinLeft(){
         clawYaw+=1;
+
 
         if(clawYaw >2){
             clawYaw =2;
         }
 
+
     }
 
+
     public void intakeClawSample(){
+
 
         if(intakeClawSampleState>4){
             intakeClawSampleState = 0;
         }
 
+
         if(intakeClawSampleState==0){
+
 
             clawAngle = 90;
             clawYaw = 0;
@@ -181,6 +214,7 @@ public class Outtake extends Subsystem {
             clawYaw = 0;
         }
 
+
         else if(intakeClawSampleState == 3){
             defaultPos();
             fullRetract();
@@ -191,12 +225,19 @@ public class Outtake extends Subsystem {
         }
 
 
+
+
         intakeClawSampleState+=1;
     }
 
+
     public int intakeClawSampleSequenceState = 0;
 
+
     public void intakeClawSequence(){
+
+
+
 
 
 
@@ -213,14 +254,18 @@ public class Outtake extends Subsystem {
             initTime();
         }
 
+
         else if(intakeClawSampleSequenceState ==2 && hasBeenTime(300)){
             armAngle=151;
             clawAngle=90;
 
+
             if(robot.clawArm.clawLimitSwitch.getState()){
                 intakeClawSample();
 
+
             }
+
 
             intakeClawSampleSequenceState+=1;
         }
@@ -231,9 +276,15 @@ public class Outtake extends Subsystem {
     }
 
 
+
+
     public int outtakeSampleSequenceState = 0;
 
+
     public void outtakeSampleSequence(){
+
+
+
 
 
 
@@ -244,26 +295,34 @@ public class Outtake extends Subsystem {
             fullRetract();
             claw.closeCLaw();
 
+
             outtakeSampleSequenceState +=1;
             initTime();
         }
+
 
         if(outtakeSampleSequenceState == 1 && hasBeenTime(150)){
             claw.openClaw();
 
+
             outtakeSampleSequenceState +=1;
             initTime();
         }
+
 
         if(outtakeSampleSequenceState == 2 && hasBeenTime(150)){
             armAngle = 30;
 
+
             outtakeSampleSequenceState +=1;
             initTime();
         }
 
+
         if(outtakeSampleSequenceState == 3 && hasBeenTime(200)){
             defaultPos();
+
+
 
 
             robot.verticalSlides.retractSlides();
@@ -274,9 +333,13 @@ public class Outtake extends Subsystem {
         }
 
 
+
+
     }
 
+
     public void update() {
+
 
         if(currentActionSequence.equals("Outtake Sample")){
             outtakeSampleSequence();
@@ -286,52 +349,67 @@ public class Outtake extends Subsystem {
         }
 
 
+
+
         claw.setGripperPos(gripperAngle);
 
+
         claw.setArmAngle(armAngle+5);
+
 
         claw.setClawPos(clawAngle,clawYaw);
 
 
 
-    }
 
-    /*
-    public void specimenScoreAuto () throws InterruptedException {
-        armAngle = 10;
-        clawAngle = 65;
-        clawYaw = 0;
-        fullRetract();
-        claw.closeCLaw();
-        robot.verticalSlides.slidesTarget = 400;
 
-        specimenSequence = 2;
-        currentActionSequence = "Outtake Specimen";
-        specimenState = 2;
-        update();
-
-        Thread.sleep(1000);
-
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < 1000) {
-            robot.verticalSlides.update();
-        }
-
-        startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < 500) {
-            robot.dtNoRR.drive(0.5, 0, 0);
-        }
-        robot.dtNoRR.drive(0,0,0);
-
-        startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < 1000) {
-            defaultPos();
-            update();
-            robot.verticalSlides.retractSlides();
-            robot.verticalSlides.update();
-        }
 
     }
-    */
+
+
+   /*
+   public void specimenScoreAuto () throws InterruptedException {
+       armAngle = 10;
+       clawAngle = 65;
+       clawYaw = 0;
+       fullRetract();
+       claw.closeCLaw();
+       robot.verticalSlides.slidesTarget = 400;
+
+
+       specimenSequence = 2;
+       currentActionSequence = "Outtake Specimen";
+       specimenState = 2;
+       update();
+
+
+       Thread.sleep(1000);
+
+
+       long startTime = System.currentTimeMillis();
+       while (System.currentTimeMillis() - startTime < 1000) {
+           robot.verticalSlides.update();
+       }
+
+
+       startTime = System.currentTimeMillis();
+       while (System.currentTimeMillis() - startTime < 500) {
+           robot.dtNoRR.drive(0.5, 0, 0);
+       }
+       robot.dtNoRR.drive(0,0,0);
+
+
+       startTime = System.currentTimeMillis();
+       while (System.currentTimeMillis() - startTime < 1000) {
+           defaultPos();
+           update();
+           robot.verticalSlides.retractSlides();
+           robot.verticalSlides.update();
+       }
+
+
+   }
+   */
+
 
 }
