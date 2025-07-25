@@ -17,8 +17,8 @@ import org.Cryptic.Subsystem;
 public class Outtake extends Subsystem {
     public Servo extendServo;
 
-    public static final double maxExtend = .10;
-    public static final double minExtend = 1;
+    public static double maxExtend = .20;
+    public static double minExtend = 0.68;
 
     public boolean extendValue;
 
@@ -258,14 +258,6 @@ public class Outtake extends Subsystem {
         else if(intakeClawSampleSequenceState ==2 && hasBeenTime(300)){
             armAngle=151;
             clawAngle=90;
-
-
-            if(robot.clawArm.clawLimitSwitch.getState()){
-                intakeClawSample();
-
-
-            }
-
 
             intakeClawSampleSequenceState+=1;
         }

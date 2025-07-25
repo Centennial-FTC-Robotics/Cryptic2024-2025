@@ -28,7 +28,7 @@ public class ClawArm extends Subsystem{
     public static double gripperPos = 0.0;
 
     public boolean clawOpened;
-    public final double clawCloseValue = .8;
+    public final double clawCloseValue = 0.83;
     public final double clawOpenValue = 0.65;
 
     private LinearOpMode opmode;

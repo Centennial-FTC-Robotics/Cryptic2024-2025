@@ -274,17 +274,19 @@ public class SampleActions extends Subsystem {
     public Action transfer(Robot robot) {
         return new SequentialAction(
             robot.baseActions.SetTransferState(robot, Intake.States.PRIME_INTAKE),
-            new SleepAction(0.2),
+            new SleepAction(0.3),
             robot.baseActions.SetTransferState(robot, Intake.States.PRIME_OUTTAKE),
-            new SleepAction(0.2),
+            new SleepAction(0.3),
             robot.baseActions.SetTransferState(robot, Intake.States.POSITION_DOWN),
-            new SleepAction(0.2),
-            robot.baseActions.SetTransferState(robot, Intake.States.MOVE_INTAKE_AND_GRAB_SAMPLE),
-            new SleepAction(0.2),
+            new SleepAction(0.3),
+            robot.baseActions.SetTransferState(robot, Intake.States.MOVE_INTAKE),
+            new SleepAction(0.3),
+            robot.baseActions.SetTransferState(robot, Intake.States.GRAB_SAMPLE),
+            new SleepAction(0.3),
             robot.baseActions.SetTransferState(robot, Intake.States.LIFT),
-            new SleepAction(0.2),
+            new SleepAction(0.3),
             robot.baseActions.SetTransferState(robot, Intake.States.MOVE_OUTTAKE),
-            new SleepAction(0.2)
+            new SleepAction(0.3)
         );
     }
 

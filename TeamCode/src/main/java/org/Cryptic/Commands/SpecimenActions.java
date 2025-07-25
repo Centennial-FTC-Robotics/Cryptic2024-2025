@@ -266,8 +266,8 @@ public class SpecimenActions extends Subsystem {
             if (!initialized) {
                 initialized = true;
 
-                robot.intake.pitchState = Intake.PitchState.STOWED;
-                robot.intake.setIntakePower(-0.6);
+                robot.intake.pitchState = Intake.PitchState.UP;
+                robot.intake.setIntakePower(-0.8);
                 startTime = System.currentTimeMillis();
             }
 

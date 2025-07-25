@@ -122,7 +122,7 @@ public class TestMeepMeep {
                 .strafeToLinearHeading(new Vector2d(50,27),Math.toRadians(-1))
                 .strafeToLinearHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(25,10,Math.toRadians(180)),Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(32,10,Math.toRadians(180)),Math.toRadians(180))
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(scoreX, scoreY, Math.toRadians(225)), Math.toRadians(45))
                 .build());

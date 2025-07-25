@@ -66,19 +66,22 @@ public class Intake extends Subsystem {
         PRIME_INTAKE,
         PRIME_OUTTAKE,
         POSITION_DOWN,
-        MOVE_INTAKE_AND_GRAB_SAMPLE,
+        MOVE_INTAKE,
+        GRAB_SAMPLE,
         LIFT,
         MOVE_OUTTAKE
     }
 
-
     public static PitchState pitchState = PitchState.STOWED;
     public static boolean primed = false;
-
 
     public static Globals.SampleColor ALLIANCE_COLOR = Globals.SampleColor.UNKNOWN;
 
     public static States transferState = null;
+
+    public static int inc = 0;
+
+    public static boolean useLimitSwitch = false;
 
     @Override
     public void init(LinearOpMode opmode) throws InterruptedException {
@@ -105,6 +108,8 @@ public class Intake extends Subsystem {
         transferState = null;
         primed = false;
         update();
+
+        inc = 0;
 
 
         setIntakePower(0);
@@ -211,11 +216,17 @@ public class Intake extends Subsystem {
                 robot.outtake.armAngle=135;
                 robot.outtake.clawAngle = 85;
                 break;
-            case MOVE_INTAKE_AND_GRAB_SAMPLE:
-                while (!robot.clawArm.clawLimitSwitch.getState()) {
-                    robot.intakeSlides.slidesMotor.setPower(-0.5);
+            case MOVE_INTAKE:
+                if (useLimitSwitch) {
+                    while (!robot.clawArm.clawLimitSwitch.getState()) {
+                        robot.intakeSlides.slidesMotor.setPower(-0.5);
+                    }
+                    robot.intakeSlides.setSlidesTarget(robot.intakeSlides.slidesMotor.getCurrentPosition());
+                } else {
+                    robot.intakeSlides.setSlidesTarget(215);
                 }
-                robot.intakeSlides.setSlidesTarget(robot.intakeSlides.slidesMotor.getCurrentPosition());
+                break;
+            case GRAB_SAMPLE:
                 robot.clawArm.closeCLaw();
                 break;
             case LIFT:
@@ -230,7 +241,6 @@ public class Intake extends Subsystem {
         }
     }
 
-    public static int inc = 0;
     public void incTransferIntakeOuttakeState () {
         // Pretty jank but it converts a gamepad press into a State
         inc+=1;

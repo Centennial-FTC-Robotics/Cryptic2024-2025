@@ -22,8 +22,8 @@ import org.Cryptic.util.Globals;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
-@Autonomous (name="5 Specimen Auto (RUN THIS)")
-public class SpecimenActive extends LinearOpMode {
+@Autonomous (name="4 Specimen Auto (RUN THIS)")
+public class FourSpecimens extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -37,30 +37,22 @@ public class SpecimenActive extends LinearOpMode {
         Pose2d observationEnd = new Pose2d(-38, 58, Math.toRadians(270));
         Pose2d rungEnd2 = new Pose2d(3, 33, Math.toRadians(270));
 
-        MecanumDrive.PARAMS.maxWheelVel = 62;
-        MecanumDrive.PARAMS.minProfileAccel = -35 ;
-        MecanumDrive.PARAMS.maxProfileAccel = 50;
-
-        MecanumDrive.PARAMS.maxAngVel = Math.PI * 1.2;
-        MecanumDrive.PARAMS.maxAngAccel = Math.PI * 1.2;
-
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         VelConstraint vel = new TranslationalVelConstraint(60);
         AccelConstraint accel = new ProfileAccelConstraint(-30, 50);
 
         // Y position needed to clip Specimen onto the rung
-        double rungY = 31.5;
-        //double rungY = 35.5;
+        double rungY = 35.5;
         //double observationY = 59.7;
-        double observationX = -37;
+        double observationX = -34;
         double observationY = 58;
 
         TrajectoryActionBuilder driveForwards = drive.actionBuilder(initialPose)
                 .stopAndAdd(robot.specimenActions.specimenScore(robot))
                 .waitSeconds(0.2)
                 // Offset this guy by 2 idk why tbh
-                .strafeToConstantHeading(new Vector2d(5, 32.5));
+                .strafeToConstantHeading(new Vector2d(-5, rungY));
         //.splineToConstantHeading(new Vector2d(-4, rungY-1.5), Math.toRadians(270));
 
         double offset = 5.0;
@@ -111,18 +103,18 @@ public class SpecimenActive extends LinearOpMode {
                 .stopAndAdd(robot.specimenActions.ActiveIntakeExpel(robot))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 // Strafe to second sample
-                .strafeToLinearHeading(new Vector2d(-32+offset, 40), Math.toRadians(210))
+                .strafeToLinearHeading(new Vector2d(-32+offset, 40), Math.toRadians(205))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeRun(robot))
-                .strafeToLinearHeading(new Vector2d(-43+offset, 40), Math.toRadians(215))
+                .strafeToLinearHeading(new Vector2d(-43+offset, 40), Math.toRadians(208))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 // Strafe to Observation zone
                 .strafeToLinearHeading(new Vector2d(-40+offset, 44), Math.toRadians(145))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeExpel(robot))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 // Strafe to third sample
-                .strafeToLinearHeading(new Vector2d(-44+offset, 40), Math.toRadians(205))
+                .strafeToLinearHeading(new Vector2d(-40+offset, 40), Math.toRadians(203))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeRun(robot))
-                .strafeToLinearHeading(new Vector2d(-50+offset, 40), Math.toRadians(210))
+                .strafeToLinearHeading(new Vector2d(-48+offset, 40), Math.toRadians(205))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
                 .strafeToLinearHeading(new Vector2d(-44+offset, 44), Math.toRadians(140))
                 .stopAndAdd(robot.specimenActions.ActiveIntakeExpel(robot))
@@ -144,7 +136,7 @@ public class SpecimenActive extends LinearOpMode {
                 .setTangent(Math.toRadians(-45))
                 .afterDisp(2, robot.specimenActions.specimenScore(robot))
                 //.strafeToLinearHeading(new Vector2d(-1, rungY), Math.toRadians(285));
-                .strafeToConstantHeading(new Vector2d(5, rungY));
+                .strafeToConstantHeading(new Vector2d(0, rungY));
 
         TrajectoryActionBuilder driveToObservation2 = driveToRung.endTrajectory().fresh()
                 .stopAndAdd(robot.specimenActions.specimenRelease(robot))
@@ -161,7 +153,7 @@ public class SpecimenActive extends LinearOpMode {
                 .setTangent(Math.toRadians(-45))
                 .afterDisp(2, robot.specimenActions.specimenScore(robot))
                 //.strafeToLinearHeading(new Vector2d(0, rungY), Math.toRadians(285));
-                .strafeToConstantHeading(new Vector2d(5, rungY));
+                .strafeToConstantHeading(new Vector2d(0, rungY));
 
         TrajectoryActionBuilder driveToObservation3 = driveToRung2.endTrajectory().fresh()
                 .stopAndAdd(robot.specimenActions.specimenRelease(robot))
@@ -178,10 +170,10 @@ public class SpecimenActive extends LinearOpMode {
                 .setTangent(Math.toRadians(-45))
                 .afterDisp(2, robot.specimenActions.specimenScore(robot))
                 //.strafeToLinearHeading(new Vector2d(0, rungY), Math.toRadians(285));
-                .strafeToConstantHeading(new Vector2d(5, rungY));
+                .strafeToConstantHeading(new Vector2d(0, rungY));
 
         TrajectoryActionBuilder driveToObservation4 = driveToRung3.endTrajectory().fresh()
-                .stopAndAdd(robot.specimenActions.specimenRelease(robot))
+                .afterDisp(0.0, robot.specimenActions.specimenRelease(robot))
                 .setReversed(true)
                 .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 //.strafeToLinearHeading(new Vector2d(-38, observationY), Math.toRadians(270))
@@ -194,13 +186,13 @@ public class SpecimenActive extends LinearOpMode {
                 .setReversed(false)
                 .setTangent(Math.toRadians(-45))
                 .afterDisp(2, robot.specimenActions.specimenScore(robot))
-                .strafeToConstantHeading(new Vector2d(5, rungY));
+                .strafeToConstantHeading(new Vector2d(0, rungY));
         //.strafeToLinearHeading(new Vector2d(0, rungY), Math.toRadians(285));
 
         // Quick Park
         // change 4 to 3 for 4 specimens
-        TrajectoryActionBuilder quickPark = driveToRung4.endTrajectory().fresh()
-                .stopAndAdd(robot.specimenActions.specimenRelease(robot))
+        TrajectoryActionBuilder quickPark = driveToRung3.endTrajectory().fresh()
+                .afterDisp(0.0, robot.specimenActions.specimenRelease(robot))
                 .setReversed(true)
                 .afterDisp(10, robot.specimenActions.specimenIntake(robot))
                 .afterDisp(15, robot.specimenActions.extendActiveIntake(robot))
@@ -254,8 +246,8 @@ public class SpecimenActive extends LinearOpMode {
                                 driveToRung2A,
                                 driveToObservation3A,
                                 driveToRung3A,
-                                driveToObservation4A,
-                                driveToRung4A,
+                                //driveToObservation4A,
+                                //driveToRung4A,
                                 quickParkA
                         ),
                         robot.specimenActions.robotUpdate(robot)
@@ -263,3 +255,4 @@ public class SpecimenActive extends LinearOpMode {
         );
     }
 }
+

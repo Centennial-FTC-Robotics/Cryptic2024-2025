@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.testing;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
@@ -15,8 +15,8 @@ import org.Cryptic.Robot;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
-@Autonomous (name="5 Sample Auto (RUN THIS)")
-public class intakeSampleAuto extends LinearOpMode {
+@Autonomous (name="4 Sample Auto (RUN THIS)")
+public class FourSamples extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -37,7 +37,7 @@ public class intakeSampleAuto extends LinearOpMode {
                 .stopAndAdd(robot.sampleActions.dropSample(robot))
                 .stopAndAdd(robot.sampleActions.reset(robot));
 
-        TrajectoryActionBuilder intakeFirstSample = driveToScore.endTrajectory().fresh()
+        TrajectoryActionBuilder intakeSample = driveToScore.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(54,43),Math.toRadians(-98))
                 // wait because extendActiveIntake runs instantly
                 .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot,300))
@@ -65,6 +65,7 @@ public class intakeSampleAuto extends LinearOpMode {
                 .stopAndAdd(robot.sampleActions.positionToScore(robot))
                 .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .stopAndAdd(robot.sampleActions.dropSample(robot))
+                .waitSeconds(0.2)
                 .stopAndAdd(robot.sampleActions.reset(robot))
 
                 .strafeToLinearHeading(new Vector2d(50,27), Math.toRadians(0))
@@ -79,25 +80,14 @@ public class intakeSampleAuto extends LinearOpMode {
                 .stopAndAdd(robot.sampleActions.positionToScore(robot))
                 .strafeToSplineHeading(new Vector2d(scoreX, scoreY), Math.toRadians(225))
                 .stopAndAdd(robot.sampleActions.dropSample(robot))
-                .waitSeconds(0.2)
                 .stopAndAdd(robot.sampleActions.reset(robot))
 
-                .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(32,10, Math.toRadians(180)), Math.toRadians(180))
-                .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot, 100))
-                .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
-                .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot, 350))
-                .waitSeconds(0.3)
-                .stopAndAdd(robot.specimenActions.ActiveIntakeRun(robot))
-                .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot, 600))
-                .waitSeconds(0.5)
-                .stopAndAdd(robot.specimenActions.ActiveIntakeUp(robot))
-                .stopAndAdd(robot.specimenActions.extendActiveIntake2(robot,100));
-
+                .setTangent(270)
+                .splineToLinearHeading(new Pose2d(40, 15, Math.toRadians(180)), Math.toRadians(180));
 
 
         Action driveToScoreA = driveToScore.build();
-        Action intakeFirstSampleA = intakeFirstSample.build();
+        Action intakeSamples = intakeSample.build();
 
         waitForStart();
 
@@ -107,7 +97,7 @@ public class intakeSampleAuto extends LinearOpMode {
                 new ParallelAction(
                         new SequentialAction(
                                 driveToScoreA,
-                                intakeFirstSampleA
+                                intakeSamples
                         ),
                         robot.specimenActions.robotUpdate(robot)
                 )

@@ -107,6 +107,7 @@ public class MainTeleOp extends LinearOpMode {
             if (intakePad.wasJustPressed(GamepadKeys.Button.Y)) {
                 robot.specimenCommands.specimenUpdate();
             }
+            /*
             if(intakePad.wasJustReleased(GamepadKeys.Button.Y) && robot.clawArm.clawLimitSwitch.getState()){
 
 
@@ -114,6 +115,8 @@ public class MainTeleOp extends LinearOpMode {
                 robot.specimenCommands.specimenUpdate();
 
             }
+
+             */
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
                 robot.outtake.outtakeSample();
@@ -171,10 +174,24 @@ public class MainTeleOp extends LinearOpMode {
                     robot.outtake.intakeClawSampleSequenceState = 0;
                 }
             }
+
+            /*
+            if(intakePad.wasJustPressed(GamepadKeys.Button.B)){
+                robot.outtake.intakeClawSample();
+            }
+
+            if(intakePad.wasJustPressed(GamepadKeys.Button.A)){
+                if(robot.outtake.intakeClawSampleState ==2){
+                    robot.outtake.currentActionSequence=  "Intake Claw Sample";
+                    robot.outtake.intakeClawSampleSequenceState = 0;
+                }
+            }
             if(intakePad.wasJustReleased(GamepadKeys.Button.A) && robot.clawArm.clawLimitSwitch.getState()){
                 robot.outtake.intakeClawSampleState=3;
                 robot.outtake.intakeClawSample();
             }
+            */
+
             // Spin Claw
             if (intakePad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
                 //robot.intake.gamepadToTransferIntakeOuttake();
