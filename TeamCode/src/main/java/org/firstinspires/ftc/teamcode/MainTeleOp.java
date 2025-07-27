@@ -22,7 +22,7 @@ import org.Cryptic.Subsystems.Intake;
 import org.Cryptic.util.Globals;
 
 @Config
-@TeleOp (name = "MainTeleOp")
+@TeleOp(name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
 
     public static double ledColor;
